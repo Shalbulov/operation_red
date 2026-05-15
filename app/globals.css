@@ -1,0 +1,417 @@
+@import "tailwindcss";
+
+/* =========================================================================
+   OPERATION RED — DESIGN TOKENS
+   Brutalist military command palette. No gradients. No rounded corners.
+   Two themes: dark (default) and light. Toggle via [data-theme] on <html>.
+   ========================================================================= */
+
+:root,
+[data-theme="dark"] {
+  /* Surfaces */
+  --bg-void: #0a0a0a;
+  --bg-panel: #121212;
+  --bg-elevated: #1a1a1a;
+  --bg-sunken: #050505;
+
+  /* Steel (cool greys) */
+  --steel-950: #161616;
+  --steel-900: #1f1f1f;
+  --steel-800: #2a2a2a;
+  --steel-700: #3a3a3a;
+  --steel-600: #4d4d4d;
+  --steel-500: #6b6b6b;
+  --steel-400: #8a8a8a;
+  --steel-300: #a8a8a8;
+  --steel-200: #c8c8c8;
+  --steel-100: #e0e0e0;
+
+  /* Bone / white */
+  --bone: #f5f5f0;
+  --bone-dim: #d9d9d4;
+  --white-pure: #ffffff;
+
+  /* Red — alert spectrum */
+  --red-alert: #e63946;
+  --red-alert-hover: #ff4654;
+  --red-blood: #8b0000;
+  --red-ember: #b71c1c;
+  --red-glow: rgba(230, 57, 70, 0.4);
+  --red-faint: rgba(230, 57, 70, 0.08);
+
+  /* Number colors (Minesweeper-style) */
+  --num-1: #e0e0e0;
+  --num-2: #c0c0c0;
+  --num-3: #ff8585;
+  --num-4: #a8a8a8;
+  --num-5: #e63946;
+  --num-6: #ff4654;
+  --num-7: #8b0000;
+  --num-8: #ffffff;
+
+  /* Sizing */
+  --cell-size: 32px;
+  --cell-size-sm: 26px;
+
+  /* Tailwind interop */
+  --background: var(--bg-void);
+  --foreground: var(--bone);
+
+  /* Grain / scanlines intensity */
+  --grain-opacity: 0.05;
+  --grain-blend: overlay;
+}
+
+/* =========================================================================
+   LIGHT THEME — inverted brutalist: bone white surfaces, ink black text,
+   red stays as the only accent.
+   ========================================================================= */
+[data-theme="light"] {
+  /* Surfaces — paper/concrete tones */
+  --bg-void: #f5f3ee;
+  --bg-panel: #ebe8e1;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #e0ddd5;
+
+  /* Steel inverts — now dark borders on light surfaces */
+  --steel-950: #e8e5dd;
+  --steel-900: #d6d2c8;
+  --steel-800: #b8b3a5;
+  --steel-700: #9a9484;
+  --steel-600: #6b6b6b;
+  --steel-500: #4a4a4a;
+  --steel-400: #2a2a2a;
+  --steel-300: #1a1a1a;
+  --steel-200: #0d0d0d;
+  --steel-100: #050505;
+
+  /* Bone → ink (text colors invert) */
+  --bone: #0a0a0a;
+  --bone-dim: #2a2a2a;
+  --white-pure: #ffffff;
+
+  /* Red — slightly darker for AA-contrast on light surfaces */
+  --red-alert: #c41e2b;
+  --red-alert-hover: #e63946;
+  --red-blood: #6b0000;
+  --red-ember: #8b0000;
+  --red-glow: rgba(196, 30, 43, 0.3);
+  --red-faint: rgba(196, 30, 43, 0.06);
+
+  /* Number colors — readable on light surface */
+  --num-1: #2a2a2a;
+  --num-2: #4a4a4a;
+  --num-3: #c41e2b;
+  --num-4: #6b6b6b;
+  --num-5: #8b0000;
+  --num-6: #c41e2b;
+  --num-7: #1a1a1a;
+  --num-8: #000000;
+
+  --background: var(--bg-void);
+  --foreground: var(--bone);
+
+  --grain-opacity: 0.04;
+  --grain-blend: multiply;
+}
+
+@theme inline {
+  --color-background: var(--bg-void);
+  --color-foreground: var(--bone);
+
+  --color-void: var(--bg-void);
+  --color-panel: var(--bg-panel);
+  --color-elevated: var(--bg-elevated);
+  --color-sunken: var(--bg-sunken);
+
+  --color-steel-950: var(--steel-950);
+  --color-steel-900: var(--steel-900);
+  --color-steel-800: var(--steel-800);
+  --color-steel-700: var(--steel-700);
+  --color-steel-600: var(--steel-600);
+  --color-steel-500: var(--steel-500);
+  --color-steel-400: var(--steel-400);
+  --color-steel-300: var(--steel-300);
+  --color-steel-200: var(--steel-200);
+  --color-steel-100: var(--steel-100);
+
+  --color-bone: var(--bone);
+  --color-bone-dim: var(--bone-dim);
+
+  --color-red-alert: var(--red-alert);
+  --color-red-blood: var(--red-blood);
+  --color-red-ember: var(--red-ember);
+
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+  --font-sans: var(--font-sans);
+
+  --radius: 0;
+}
+
+/* =========================================================================
+   BASE
+   ========================================================================= */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  background: var(--bg-void);
+  color: var(--bone);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-image:
+    /* tactical grid */
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+:root,
+[data-theme="dark"] {
+  --grid-line: rgba(255, 255, 255, 0.015);
+}
+
+[data-theme="light"] {
+  --grid-line: rgba(0, 0, 0, 0.025);
+}
+
+::selection {
+  background: var(--red-alert);
+  color: var(--bg-void);
+}
+
+/* Stencil-style ASCII headings */
+.stencil {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   GRAIN OVERLAY (film noise)
+   ========================================================================= */
+
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: var(--grain-opacity, 0.05);
+  mix-blend-mode: var(--grain-blend, overlay);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* Scan-line decoration */
+.scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(255, 255, 255, 0.012) 3px,
+    rgba(255, 255, 255, 0.012) 4px
+  );
+}
+
+/* =========================================================================
+   STENCIL FRAMES & BRUTALIST PRIMITIVES
+   ========================================================================= */
+
+.frame {
+  border: 1px solid var(--steel-700);
+  background: var(--bg-panel);
+}
+
+.frame-elevated {
+  border: 1px solid var(--steel-700);
+  background: var(--bg-elevated);
+  box-shadow: 0 0 0 1px var(--bg-void) inset, 4px 4px 0 var(--red-blood);
+}
+
+.tag {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid var(--steel-700);
+  color: var(--steel-300);
+  background: var(--bg-sunken);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tag-red {
+  border-color: var(--red-alert);
+  color: var(--red-alert);
+  background: var(--red-faint);
+}
+
+.btn-primary {
+  background: var(--red-alert);
+  color: var(--bg-void);
+  font-family: var(--font-mono), monospace;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border: 1px solid var(--red-alert);
+  transition: all 80ms ease;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background: var(--red-alert-hover);
+  box-shadow: 4px 4px 0 var(--red-blood);
+  transform: translate(-2px, -2px);
+}
+.btn-primary:active {
+  transform: translate(0, 0);
+  box-shadow: 0 0 0 var(--red-blood);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--bone);
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border: 1px solid var(--steel-700);
+  transition: all 80ms ease;
+  cursor: pointer;
+}
+.btn-ghost:hover {
+  border-color: var(--bone);
+  background: var(--steel-900);
+}
+
+/* =========================================================================
+   GAME BOARD CELLS
+   ========================================================================= */
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono), monospace;
+  font-weight: 700;
+  font-size: 16px;
+  background: var(--cell-bg, var(--steel-800));
+  border: 1px solid var(--cell-border, var(--steel-900));
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: background 60ms ease;
+}
+
+.cell:hover:not(.cell-open):not(.cell-flag) {
+  background: var(--cell-bg-hover, var(--steel-700));
+}
+
+.cell-open {
+  background: var(--cell-bg-open, var(--bg-elevated));
+  border-color: var(--cell-border-open, var(--steel-900));
+  cursor: default;
+}
+
+.cell-mine {
+  background: var(--red-blood);
+  color: var(--bone);
+  animation: explode 0.4s ease-out;
+}
+
+.cell-hint {
+  animation: hint-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes explode {
+  0% {
+    transform: scale(0.9);
+    background: var(--red-alert);
+  }
+  60% {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px var(--red-glow);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes hint-pulse {
+  0%,
+  100% {
+    box-shadow: inset 0 0 0 2px var(--red-alert);
+  }
+  50% {
+    box-shadow: inset 0 0 0 2px var(--red-alert), 0 0 18px var(--red-glow);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20% { transform: translate3d(-4px, 2px, 0); }
+  40% { transform: translate3d(4px, -2px, 0); }
+  60% { transform: translate3d(-2px, 1px, 0); }
+  80% { transform: translate3d(2px, -1px, 0); }
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-sunken);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--steel-700);
+  border: 2px solid var(--bg-sunken);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--red-blood);
+}
+
+/* Focus rings */
+:focus-visible {
+  outline: 2px solid var(--red-alert);
+  outline-offset: 2px;
+}
+
+/* Safe-area insets (iOS) */
+.safe-top { padding-top: env(safe-area-inset-top); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
