@@ -97,31 +97,42 @@ export function findProductBySlug(slug: ProductSlug): PolarProduct {
 }
 
 /**
- * Resolve a Polar product for a given skin id (skin.id from skins/registry).
- * Returns undefined if there is no paid SKU (e.g. ops/ink/glass).
+ * Pure id-to-slug mapping (safe to use on the client).
+ * The slug is then resolved to a real Polar product id on the server.
+ */
+const SKIN_TO_SLUG: Record<string, ProductSlug> = {
+  carbon: "skin_carbon",
+  blueprint: "skin_blueprint",
+  neonTokyo: "skin_neon_tokyo",
+  vintage: "skin_vintage",
+};
+const BACKGROUND_TO_SLUG: Record<string, ProductSlug> = {
+  bloodMoon: "bg_blood_moon",
+};
+
+export function getSlugForSkin(skinId: string): ProductSlug | undefined {
+  return SKIN_TO_SLUG[skinId];
+}
+
+export function getSlugForBackground(bgId: string): ProductSlug | undefined {
+  return BACKGROUND_TO_SLUG[bgId];
+}
+
+/**
+ * @deprecated — these read env vars and only work server-side.
+ * Use slug-based redirect through /api/polar/buy on the client.
  */
 export function getPolarProductForSkin(
   skinId: string,
 ): PolarProduct | undefined {
-  const map: Record<string, ProductSlug> = {
-    carbon: "skin_carbon",
-    blueprint: "skin_blueprint",
-    neonTokyo: "skin_neon_tokyo",
-    vintage: "skin_vintage",
-  };
-  const slug = map[skinId];
+  const slug = SKIN_TO_SLUG[skinId];
   return slug ? PRODUCTS[slug] : undefined;
 }
 
-/**
- * Resolve a Polar product for a given background id.
- */
+/** @deprecated — see getPolarProductForSkin. */
 export function getPolarProductForBackground(
   bgId: string,
 ): PolarProduct | undefined {
-  const map: Record<string, ProductSlug> = {
-    bloodMoon: "bg_blood_moon",
-  };
-  const slug = map[bgId];
+  const slug = BACKGROUND_TO_SLUG[bgId];
   return slug ? PRODUCTS[slug] : undefined;
 }

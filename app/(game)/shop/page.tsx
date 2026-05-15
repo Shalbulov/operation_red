@@ -14,11 +14,7 @@ import {
 import { toast } from "sonner";
 import { SKIN_LIST } from "@/lib/skins/registry";
 import { BACKGROUND_LIST, getBackground } from "@/lib/skins/backgrounds";
-import {
-  PRODUCTS,
-  getPolarProductForSkin,
-  getPolarProductForBackground,
-} from "@/lib/polar/products";
+import { getSlugForSkin, getSlugForBackground } from "@/lib/polar/products";
 import { useSettingsStore } from "@/lib/stores/settingsStore";
 import { useInventoryStore } from "@/lib/stores/inventoryStore";
 import { SkinPreview } from "@/components/shop/SkinPreview";
@@ -116,27 +112,13 @@ export default function ShopPage() {
     }
   };
 
-  const buyWithPolar = async (productId: string | undefined) => {
-    if (!productId) {
-      toast.error("Polar product ID не настроен");
+  /** Buy via Polar — slug is resolved to product id server-side. */
+  const buyWithPolarSlug = (slug: string | undefined) => {
+    if (!slug) {
+      toast.error("Этот продукт пока недоступен");
       return;
     }
-    // Try to attach the user's email and external_id so Polar can link the
-    // order to the Supabase profile via webhook.
-    const params = new URLSearchParams({ products: productId });
-    try {
-      const supabase = createSupabaseBrowserClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        if (user.email) params.set("customerEmail", user.email);
-        params.set("customerExternalId", user.id);
-      }
-    } catch {
-      /* anon checkout — still works */
-    }
-    window.location.href = `/api/polar/checkout?${params.toString()}`;
+    window.location.href = `/api/polar/buy?slug=${encodeURIComponent(slug)}`;
   };
 
   return (
@@ -257,11 +239,7 @@ export default function ShopPage() {
                         )}
                         {skin.priceCents > 0 && (
                           <button
-                            onClick={() =>
-                              buyWithPolar(
-                                getPolarProductForSkin(skin.id)?.polarProductId,
-                              )
-                            }
+                            onClick={() => buyWithPolarSlug(getSlugForSkin(skin.id))}
                             className="btn-primary flex-1 !py-2 !px-2 text-xs flex items-center justify-center gap-1"
                           >
                             <CreditCard className="w-3 h-3" />
@@ -342,10 +320,7 @@ export default function ShopPage() {
                         {bg.priceCents > 0 && (
                           <button
                             onClick={() =>
-                              buyWithPolar(
-                                getPolarProductForBackground(bg.id)
-                                  ?.polarProductId,
-                              )
+                              buyWithPolarSlug(getSlugForBackground(bg.id))
                             }
                             className="btn-primary flex-1 !py-2 !px-2 text-xs flex items-center justify-center gap-1"
                           >
@@ -388,7 +363,7 @@ export default function ShopPage() {
                   <ProFeature>Поддержка независимого разработчика</ProFeature>
                 </ul>
                 <button
-                  onClick={() => buyWithPolar(PRODUCTS.pro_monthly.polarProductId)}
+                  onClick={() => buyWithPolarSlug("pro_monthly")}
                   className="btn-primary w-full flex items-center justify-center gap-2"
                 >
                   <CreditCard className="w-4 h-4" />
@@ -417,7 +392,7 @@ export default function ShopPage() {
                 <ProFeature>Доступ навсегда</ProFeature>
               </ul>
               <button
-                onClick={() => buyWithPolar(PRODUCTS.bundle_mega.polarProductId)}
+                onClick={() => buyWithPolarSlug("bundle_mega")}
                 className="btn-ghost w-full flex items-center justify-center gap-2"
               >
                 <CreditCard className="w-4 h-4" />
