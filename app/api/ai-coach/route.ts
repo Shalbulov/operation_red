@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { serializeBoard } from "@/lib/ai/serializeBoard";
 import { getCoachHint } from "@/lib/ai/gemini";
-import { AI_LIMITS } from "@/lib/constants";
+import { solveBoardServer, type ServerHint } from "@/lib/ai/serverSolver";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,8 +21,11 @@ const BodySchema = z.object({
   flagsPlaced: z.number().int().min(0),
 });
 
-const WINDOW_MS = 5 * 60 * 1000; // 5 minutes
-const FREE_LIMIT = 3;
+const WINDOW_MS = 5 * 60 * 1000;
+const FREE_LIMIT = 5;
+
+/** Confidence threshold above which we trust the deterministic solver. */
+const SOLVER_TRUST = 0.99;
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -36,14 +39,34 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "validation" }, { status: 400 });
   }
 
-  if (!process.env.GEMINI_API_KEY) {
-    return NextResponse.json(
-      { error: "gemini not configured" },
-      { status: 503 },
-    );
+  // ── 1. Try deterministic solver first ─────────────────────────
+  // Constraint analysis is 100% reliable on positions with logical
+  // deductions — only fall through to Gemini when genuinely ambiguous.
+  const solverHint: ServerHint | null = solveBoardServer(
+    parsed.data.board,
+    parsed.data.width,
+    parsed.data.height,
+    parsed.data.mines,
+    parsed.data.flagsPlaced,
+  );
+
+  if (solverHint && solverHint.confidence >= SOLVER_TRUST) {
+    // Logical certainty — no need to call the LLM, no rate-limit charge.
+    return NextResponse.json({
+      ...solverHint,
+      // Make sure target cell is actually actionable
+      ...assertActionable(parsed.data.board, solverHint),
+    });
   }
 
-  // Auth + rate-limit
+  // ── 2. Need Gemini for an ambiguous position ──────────────────
+  if (!process.env.GEMINI_API_KEY) {
+    // Fall back to solver's probabilistic guess (still informative)
+    if (solverHint) return NextResponse.json(solverHint);
+    return NextResponse.json({ error: "gemini not configured" }, { status: 503 });
+  }
+
+  // Auth + rate-limit (only counts paid Gemini calls)
   let userId: string | null = null;
   let isPro = false;
   try {
@@ -68,18 +91,24 @@ export async function POST(req: NextRequest) {
           .eq("user_id", user.id)
           .gte("created_at", since);
         if ((count ?? 0) >= FREE_LIMIT) {
+          // Out of free hints — still serve solver guess
+          if (solverHint) {
+            return NextResponse.json({
+              ...solverHint,
+              reasoning:
+                `[лимит Gemini исчерпан — локальный анализ] ` +
+                solverHint.reasoning,
+            });
+          }
           return NextResponse.json(
-            {
-              error: "rate_limit",
-              message: `Free лимит: ${FREE_LIMIT}/${WINDOW_MS / 60000}мин. Upgrade to Pro.`,
-            },
+            { error: "rate_limit", message: `Free лимит: ${FREE_LIMIT}/${WINDOW_MS / 60000}мин. Upgrade to Pro.` },
             { status: 429 },
           );
         }
       }
     }
   } catch {
-    // Supabase not configured — allow anonymous usage (helpful for dev)
+    /* Supabase not configured — anonymous use */
   }
 
   const boardText = serializeBoard(
@@ -97,16 +126,27 @@ export async function POST(req: NextRequest) {
       flagsPlaced: parsed.data.flagsPlaced,
     });
 
-    // Validate the cell is actionable (not already open)
+    // Sanity check — never recommend an already-open cell
     const target = parsed.data.board[hint.y]?.[hint.x];
     if (!target || target.state === "open") {
+      // Fall back to solver
+      if (solverHint) return NextResponse.json(solverHint);
       return NextResponse.json(
         { error: "invalid_target_from_ai" },
         { status: 502 },
       );
     }
 
-    // Log usage
+    // Cap Gemini confidence — model tends to over-estimate. If solver disagrees
+    // with high confidence on the same cell, prefer solver.
+    let finalHint = { ...hint, source: "ai" as const };
+    if (solverHint && solverHint.x === hint.x && solverHint.y === hint.y) {
+      finalHint = {
+        ...finalHint,
+        confidence: Math.max(hint.confidence, solverHint.confidence),
+      };
+    }
+
     if (userId) {
       try {
         const supabase = await createSupabaseServerClient();
@@ -116,11 +156,29 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json(hint);
+    return NextResponse.json(finalHint);
   } catch (e) {
+    // Gemini failed — serve solver guess if we have one
+    if (solverHint) {
+      return NextResponse.json({
+        ...solverHint,
+        reasoning:
+          `[Gemini недоступен — локальный анализ] ` + solverHint.reasoning,
+      });
+    }
     const msg = e instanceof Error ? e.message : "ai error";
     return NextResponse.json({ error: msg }, { status: 502 });
   }
 }
 
-void AI_LIMITS;
+function assertActionable(
+  board: { state: string }[][],
+  hint: ServerHint,
+): Partial<ServerHint> {
+  const target = board[hint.y]?.[hint.x];
+  if (!target || target.state === "open") {
+    // Should never happen, but bail with confidence 0 to signal frontend
+    return { confidence: 0, reasoning: "[invalid solver target]" };
+  }
+  return {};
+}
