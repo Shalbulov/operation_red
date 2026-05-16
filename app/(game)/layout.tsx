@@ -1,4 +1,5 @@
 import { TopBar } from "@/components/hud/TopBar";
+import { BackgroundSurface } from "@/components/hud/BackgroundSurface";
 
 export default function GameLayout({
   children,
@@ -7,6 +8,7 @@ export default function GameLayout({
 }) {
   return (
     <div className="flex flex-col min-h-full">
+      <BackgroundSurface />
       <TopBar />
       <div className="flex-1 flex flex-col">{children}</div>
     </div>

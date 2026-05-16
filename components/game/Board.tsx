@@ -6,7 +6,6 @@ import { useGameStore } from "@/lib/stores/gameStore";
 import { useSettingsStore } from "@/lib/stores/settingsStore";
 import { useInventoryStore } from "@/lib/stores/inventoryStore";
 import { getSkin } from "@/lib/skins/registry";
-import { getBackground } from "@/lib/skins/backgrounds";
 
 export function Board() {
   const board = useGameStore((s) => s.board);
@@ -18,14 +17,9 @@ export function Board() {
   const chordAt = useGameStore((s) => s.chordAt);
 
   const skinId = useSettingsStore((s) => s.skinId);
-  const backgroundId = useSettingsStore((s) => s.backgroundId);
   const ownsSkin = useInventoryStore((s) => s.ownsSkin);
-  const ownsBg = useInventoryStore((s) => s.ownsBackground);
-
   const activeSkinId = ownsSkin(skinId) ? skinId : "ops";
-  const activeBgId = ownsBg(backgroundId) ? backgroundId : "void";
   const skin = getSkin(activeSkinId);
-  const background = getBackground(activeBgId);
 
   const [exploded, setExploded] = useState<{ x: number; y: number } | null>(null);
 
@@ -72,8 +66,7 @@ export function Board() {
   return (
     <div
       ref={containerRef}
-      className="relative flex justify-center w-full overflow-auto p-4 sm:p-6 border border-steel-700"
-      style={background.style}
+      className="relative flex justify-center w-full overflow-auto p-4 sm:p-6 border border-steel-700 bg-void/40 backdrop-blur-[2px]"
     >
       <div
         className="inline-block frame-elevated p-1"
