@@ -273,6 +273,55 @@ export const dictionaries = {
 
     // AI language label for the Gemini system prompt
     "_ai.language": "русский",
+
+    // Tutorial
+    "nav.tutorial": "Обучение",
+    "tut.tag": "ОБУЧЕНИЕ",
+    "tut.heading.1": "СТАНЬ",
+    "tut.heading.2": "САПЁРОМ",
+    "tut.progress": "Шаг {n} из {total}",
+    "tut.btn.next": "Далее",
+    "tut.btn.back": "Назад",
+    "tut.btn.skip": "Пропустить обучение",
+    "tut.btn.tryAgain": "Попробуй ещё раз",
+    "tut.btn.startPlaying": "Начать играть",
+    "tut.complete.title": "БРИФИНГ ЗАВЕРШЁН",
+    "tut.complete.desc": "Ты знаешь всё нужное чтобы выйти на поле. Удачи, сапёр.",
+    "tut.cta.landing": "Не знаешь как играть? Пройди обучение",
+    "tut.wrong": "Не та клетка / не то действие. Подумай и попробуй снова.",
+
+    "tut.s1.title": "ЗАДАЧА",
+    "tut.s1.desc":
+      "Открой каждую клетку поля, которая НЕ мина. Найди их все — но не нажми ни на одну. Один подрыв — конец миссии.",
+    "tut.s2.title": "ПЕРВЫЙ КЛИК",
+    "tut.s2.desc":
+      "Мины расставляются ПОСЛЕ твоего первого клика. Поэтому первый ход всегда безопасный. Центр поля даёт самую большую открытую область.",
+    "tut.s2.task": "Нажми на подсвеченную клетку в центре.",
+    "tut.s2.success":
+      "Видишь? Мины обошли твой клик. Открытая область — твоя стартовая зацепка.",
+    "tut.s3.title": "ЧИСЛА",
+    "tut.s3.desc":
+      "Число в клетке = сколько мин среди её 8 соседей. «1» значит ровно одна из 8 соседних клеток — мина.",
+    "tut.s4.title": "ЛОГИЧЕСКИЙ ВЫВОД",
+    "tut.s4.desc":
+      "У этой «1» только ОДИН закрытый сосед. Значит этот сосед ОБЯЗАТЕЛЬНО мина. Без угадывания.",
+    "tut.s4.task": "Поставь флаг на единственной закрытой клетке (правый клик / долгий тап).",
+    "tut.s4.success":
+      "Флаг поставлен. Так решают опытные игроки — через логику, без удачи.",
+    "tut.s5.title": "БЕЗОПАСНОСТЬ ЧЕРЕЗ ФЛАГИ",
+    "tut.s5.desc":
+      "У этой «2» уже стоят 2 флага среди соседей — значит остальные соседи 100% безопасны.",
+    "tut.s5.task": "Открой подсвеченную клетку — она гарантированно безопасна.",
+    "tut.s5.success": "Точно. Ты использовал логику для 100% безопасного хода.",
+    "tut.s6.title": "CHORD-КЛИК (ПРОДВИНУТО)",
+    "tut.s6.desc":
+      "Кликни по открытой цифре, вокруг которой стоит нужное число флагов — это откроет все остальные соседи разом.",
+    "tut.s6.task": "Кликни по «2» — все безопасные соседи откроются автоматически.",
+    "tut.s6.success":
+      "Speedrun-приём! Экономит 3+ клика на каждой цифре. Так играют рекордсмены.",
+    "tut.s7.title": "ПОБЕДА",
+    "tut.s7.desc":
+      "Победа = открыть все клетки кроме мин. Флаги ставить НЕ обязательно — последняя открытая безопасная клетка засчитает победу. Готов? Выходи на поле.",
   },
 
   en: {
@@ -520,6 +569,55 @@ export const dictionaries = {
     "server.geminiOverLimit": "[Gemini limit reached — local analysis]",
 
     "_ai.language": "English",
+
+    "nav.tutorial": "Tutorial",
+    "tut.tag": "TUTORIAL",
+    "tut.heading.1": "BECOME",
+    "tut.heading.2": "A SAPPER",
+    "tut.progress": "Step {n} of {total}",
+    "tut.btn.next": "Next",
+    "tut.btn.back": "Back",
+    "tut.btn.skip": "Skip tutorial",
+    "tut.btn.tryAgain": "Try again",
+    "tut.btn.startPlaying": "Start playing",
+    "tut.complete.title": "BRIEFING COMPLETE",
+    "tut.complete.desc": "You have everything you need. Good luck, sapper.",
+    "tut.cta.landing": "Don't know how to play? Take the tutorial",
+    "tut.wrong": "Wrong cell or action. Think it through and try again.",
+
+    "tut.s1.title": "THE MISSION",
+    "tut.s1.desc":
+      "Open every cell that is NOT a mine. Find them all — but never click on one. One detonation ends the mission.",
+    "tut.s2.title": "FIRST CLICK",
+    "tut.s2.desc":
+      "Mines are placed AFTER your first click. That's why move one is always safe. Clicking the center reveals the biggest area.",
+    "tut.s2.task": "Click the highlighted cell in the center.",
+    "tut.s2.success":
+      "See? The mines moved around your click. The opened region is your starting clue.",
+    "tut.s3.title": "NUMBERS",
+    "tut.s3.desc":
+      "A number in a cell = how many mines are among its 8 neighbors. '1' means exactly one of the 8 surrounding cells is a mine.",
+    "tut.s4.title": "LOGICAL DEDUCTION",
+    "tut.s4.desc":
+      "This '1' has only ONE closed neighbor. That neighbor MUST be a mine. No guessing involved.",
+    "tut.s4.task":
+      "Flag the only closed cell (right-click / long-press on mobile).",
+    "tut.s4.success":
+      "Flagged. This is how experienced players decide — pure logic, zero luck.",
+    "tut.s5.title": "SAFETY THROUGH FLAGS",
+    "tut.s5.desc":
+      "This '2' already has 2 flags among its neighbors — so the remaining neighbors are 100% safe.",
+    "tut.s5.task": "Open the highlighted cell — it's guaranteed safe.",
+    "tut.s5.success": "Exactly. You used logic to make a 100% safe move.",
+    "tut.s6.title": "CHORD CLICK (ADVANCED)",
+    "tut.s6.desc":
+      "Click on an open number that already has the right amount of flags around it — all other closed neighbors open at once.",
+    "tut.s6.task": "Click on the '2' — every safe neighbor opens automatically.",
+    "tut.s6.success":
+      "Speedrun move. Saves 3+ clicks per number. This is how record holders play.",
+    "tut.s7.title": "VICTORY",
+    "tut.s7.desc":
+      "You win by opening every non-mine cell. You DON'T have to flag mines — opening the last safe cell ends the game. Ready? Hit the field.",
   },
 
   kz: {
@@ -768,6 +866,56 @@ export const dictionaries = {
     "server.geminiOverLimit": "[Gemini лимиті таусылды — жергілікті талдау]",
 
     "_ai.language": "қазақ",
+
+    "nav.tutorial": "Үйрену",
+    "tut.tag": "ҮЙРЕНУ",
+    "tut.heading.1": "САПЁР",
+    "tut.heading.2": "БОЛ",
+    "tut.progress": "Қадам {n} / {total}",
+    "tut.btn.next": "Келесі",
+    "tut.btn.back": "Артқа",
+    "tut.btn.skip": "Үйренуді өткізіп жіберу",
+    "tut.btn.tryAgain": "Қайта көр",
+    "tut.btn.startPlaying": "Ойынды бастау",
+    "tut.complete.title": "БРИФИНГ АЯҚТАЛДЫ",
+    "tut.complete.desc": "Сапёр, барлығын білесің. Сәттілік.",
+    "tut.cta.landing": "Ойнауды білмейсің бе? Үйренуден өт",
+    "tut.wrong": "Қате ұяшық немесе әрекет. Ойлан да қайта көр.",
+
+    "tut.s1.title": "МИССИЯ",
+    "tut.s1.desc":
+      "Мина ЕМЕС әрбір ұяшықты аш. Барлығын тап — бірақ ешқайсысын баспа. Бір жарылыс — миссияның соңы.",
+    "tut.s2.title": "БІРІНШІ КЛИК",
+    "tut.s2.desc":
+      "Миналар сенің бірінші кликіңнен КЕЙІН орналастырылады. Сол себепті бірінші жүріс әрқашан қауіпсіз. Орталықты бассаң ең үлкен аумақ ашылады.",
+    "tut.s2.task": "Орталықтағы белгіленген ұяшықты бас.",
+    "tut.s2.success":
+      "Көрдің бе? Миналар сенің кликіңді айналып өтті. Ашылған аумақ — бастапқы ишараң.",
+    "tut.s3.title": "САНДАР",
+    "tut.s3.desc":
+      "Ұяшықтағы сан = оның 8 көршісі арасында қанша мина бар. '1' — 8 көршінің біреуі мина дегенді білдіреді.",
+    "tut.s4.title": "ЛОГИКАЛЫҚ ҚОРЫТЫНДЫ",
+    "tut.s4.desc":
+      "Бұл '1'-дің тек БІР жабық көршісі бар. Демек ол көрші — МІНДЕТТІ ТҮРДЕ мина. Болжаусыз.",
+    "tut.s4.task":
+      "Жалғыз жабық ұяшыққа ту қой (оң клик / ұзақ басу).",
+    "tut.s4.success":
+      "Ту қойылды. Тәжірибелі ойыншылар осылай шешеді — таза логика, нөл бақыт.",
+    "tut.s5.title": "ТУЛАР АРҚЫЛЫ ҚАУІПСІЗДІК",
+    "tut.s5.desc":
+      "Бұл '2'-нің 2 туы бар — басқа көршілер 100% қауіпсіз.",
+    "tut.s5.task": "Белгіленген ұяшықты аш — ол кепілдендірілген қауіпсіз.",
+    "tut.s5.success":
+      "Дәл. 100% қауіпсіз жүрісті логикамен жасадың.",
+    "tut.s6.title": "CHORD КЛИК (КҮРДЕЛІ)",
+    "tut.s6.desc":
+      "Айналасында дұрыс саны бар тулары бар ашық санға бас — қалған көршілердің барлығы бір уақытта ашылады.",
+    "tut.s6.task": "'2'-ге бас — қауіпсіз көршілердің барлығы автоматты түрде ашылады.",
+    "tut.s6.success":
+      "Speedrun тәсілі! Әр сан үшін 3+ клик үнемдейді. Чемпиондар осылай ойнайды.",
+    "tut.s7.title": "ЖЕҢІС",
+    "tut.s7.desc":
+      "Жеңіс = мина емес барлық ұяшықты ашу. Тулар қою МІНДЕТ ЕМЕС — соңғы қауіпсіз ұяшықты ашқанда жеңіс. Дайынсың ба? Алаңға шық.",
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 

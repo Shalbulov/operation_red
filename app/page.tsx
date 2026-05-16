@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Radio, Crosshair, Flame, Trophy, Sparkles, Lock } from "lucide-react";
+import { Radio, Crosshair, Flame, Trophy, Sparkles, Lock, GraduationCap } from "lucide-react";
 import { ThemeToggle } from "@/components/hud/ThemeToggle";
 import { LanguageToggle } from "@/components/hud/LanguageToggle";
 import { useT } from "@/lib/i18n/useT";
@@ -62,6 +62,17 @@ export default function LandingPage() {
               {t("landing.cta.shop")}
             </Link>
           </div>
+
+          {/* Tutorial CTA for newcomers */}
+          <Link
+            href="/tutorial"
+            className="mt-6 inline-flex items-center gap-2 group"
+          >
+            <GraduationCap className="w-3.5 h-3.5 text-red-alert group-hover:scale-110 transition-transform" />
+            <span className="mono text-xs uppercase tracking-widest text-bone-dim group-hover:text-red-alert underline decoration-dotted underline-offset-4">
+              {t("tut.cta.landing")}
+            </span>
+          </Link>
 
           {/* HUD readouts */}
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px bg-steel-700 border border-steel-700">

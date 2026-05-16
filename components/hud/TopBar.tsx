@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Crosshair, Radio, Trophy, Sparkles, User, Coins } from "lucide-react";
+import { Crosshair, Radio, Trophy, Sparkles, User, Coins, GraduationCap } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useInventoryStore } from "@/lib/stores/inventoryStore";
 import { ThemeToggle } from "./ThemeToggle";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils/cn";
 const NAV = [
   { href: "/play", labelKey: "nav.play" as const, icon: Crosshair },
   { href: "/daily", labelKey: "nav.daily" as const, icon: Radio },
+  { href: "/tutorial", labelKey: "nav.tutorial" as const, icon: GraduationCap },
   { href: "/leaderboard", labelKey: "nav.leaderboard" as const, icon: Trophy },
   { href: "/shop", labelKey: "nav.shop" as const, icon: Sparkles },
 ];
