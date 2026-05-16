@@ -199,7 +199,7 @@ export default function ShopPage() {
                   </div>
 
                   <p className="text-bone-dim text-xs leading-relaxed min-h-[2.5rem]">
-                    {skin.description}
+                    {t(`skin.${skin.id}.desc` as Parameters<typeof t>[0]) || skin.description}
                   </p>
 
                   <div className="flex gap-2 mt-auto">
@@ -289,7 +289,7 @@ export default function ShopPage() {
                   </div>
 
                   <p className="text-bone-dim text-xs leading-relaxed min-h-[2.5rem]">
-                    {bg.description}
+                    {t(`bg.${bg.id}.desc` as Parameters<typeof t>[0]) || bg.description}
                   </p>
 
                   <div className="flex gap-2 mt-auto">

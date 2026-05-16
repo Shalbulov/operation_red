@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { formatTime } from "@/lib/utils/format";
 import { toast } from "sonner";
+import { useT } from "@/lib/i18n/useT";
 
 type Profile = {
   id: string;
@@ -26,6 +27,7 @@ type Game = {
 };
 
 export default function ProfilePage() {
+  const t = useT();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,7 +83,7 @@ export default function ProfilePage() {
     }
     setProfile({ ...profile, username: draft.username, city: draft.city });
     setEditing(false);
-    toast.success("Сохранено");
+    toast.success(t("profile.toast.saved"));
   };
 
   const signOut = async () => {
@@ -116,12 +118,12 @@ export default function ProfilePage() {
       <main className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="frame-elevated max-w-md p-8 text-center">
           <User className="w-10 h-10 text-red-alert mx-auto mb-4" />
-          <h1 className="display text-2xl mb-3">НЕ АВТОРИЗОВАН</h1>
+          <h1 className="display text-2xl mb-3">{t("profile.unauthorized.title")}</h1>
           <p className="text-bone-dim text-sm mb-6">
-            Войди, чтобы сохранять прогресс и попадать в лидерборд.
+            {t("profile.unauthorized.desc")}
           </p>
           <Link href="/login" className="btn-primary inline-flex">
-            Войти
+            {t("profile.btn.login")}
           </Link>
         </div>
       </main>
@@ -152,7 +154,7 @@ export default function ProfilePage() {
                 <User className="w-8 h-8 text-red-alert" />
               </div>
               <div>
-                <span className="tag tag-red mb-1">АГЕНТ</span>
+                <span className="tag tag-red mb-1">{t("profile.tag")}</span>
                 <h1 className="display text-2xl sm:text-3xl">
                   {profile.username ?? "agent"}
                 </h1>
@@ -167,14 +169,14 @@ export default function ProfilePage() {
                 className="btn-ghost flex items-center gap-2 !py-2 !px-3"
               >
                 <Edit2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">{editing ? "Отмена" : "Изменить"}</span>
+                <span className="hidden sm:inline">{editing ? t("common.cancel") : t("profile.btn.edit")}</span>
               </button>
               <button
                 onClick={signOut}
                 className="btn-ghost flex items-center gap-2 !py-2 !px-3"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Выйти</span>
+                <span className="hidden sm:inline">{t("profile.btn.signout")}</span>
               </button>
             </div>
           </div>
@@ -183,7 +185,7 @@ export default function ProfilePage() {
             <div className="p-6 space-y-3 border-b border-steel-700 bg-sunken">
               <div>
                 <label className="mono text-[10px] text-steel-400 uppercase tracking-widest block mb-1">
-                  Username
+                  {t("profile.field.username")}
                 </label>
                 <input
                   value={draft.username}
@@ -193,7 +195,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <label className="mono text-[10px] text-steel-400 uppercase tracking-widest block mb-1">
-                  Город
+                  {t("profile.field.city")}
                 </label>
                 <input
                   value={draft.city}
@@ -203,17 +205,17 @@ export default function ProfilePage() {
                 />
               </div>
               <button onClick={save} className="btn-primary">
-                Сохранить
+                {t("common.save")}
               </button>
             </div>
           )}
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-steel-700">
-            <Stat label="ПОБЕДЫ" value={String(wins)} />
-            <Stat label="ПОДРЫВЫ" value={String(losses)} />
-            <Stat label="WIN%" value={`${winRate}%`} />
+            <Stat label={t("profile.stat.wins")} value={String(wins)} />
+            <Stat label={t("profile.stat.losses")} value={String(losses)} />
+            <Stat label={t("profile.stat.winrate")} value={`${winRate}%`} />
             <Stat
-              label="ЛУЧШЕЕ"
+              label={t("profile.stat.best")}
               value={fastest ? formatTime(fastest.time) : "—"}
               hint={fastest?.diff}
             />
@@ -224,11 +226,11 @@ export default function ProfilePage() {
         <div className="frame">
           <div className="flex items-center gap-2 border-b border-steel-700 p-4">
             <Trophy className="w-4 h-4 text-red-alert" />
-            <span className="stencil text-sm">ИСТОРИЯ ПАРТИЙ</span>
+            <span className="stencil text-sm">{t("profile.history.title")}</span>
           </div>
           {games.length === 0 ? (
             <div className="p-8 text-center text-steel-500 mono text-xs uppercase tracking-widest">
-              Партий пока нет. <Link href="/play" className="text-red-alert underline">Начать</Link>
+              {t("profile.history.empty")} <Link href="/play" className="text-red-alert underline">{t("profile.history.start")}</Link>
             </div>
           ) : (
             <div>

@@ -4,6 +4,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { serializeBoard } from "@/lib/ai/serializeBoard";
 import { getCoachHint } from "@/lib/ai/gemini";
 import { solveBoardServer, type ServerHint } from "@/lib/ai/serverSolver";
+import { parseLocale, tServer } from "@/lib/i18n/serverT";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,6 +20,7 @@ const BodySchema = z.object({
   height: z.number().int().min(3).max(50),
   mines: z.number().int().min(1).max(500),
   flagsPlaced: z.number().int().min(0),
+  locale: z.enum(["ru", "en", "kz"]).optional(),
 });
 
 const WINDOW_MS = 5 * 60 * 1000;
@@ -38,16 +40,16 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: "validation" }, { status: 400 });
   }
+  const locale = parseLocale(parsed.data.locale);
 
   // ── 1. Try deterministic solver first ─────────────────────────
-  // Constraint analysis is 100% reliable on positions with logical
-  // deductions — only fall through to Gemini when genuinely ambiguous.
   const solverHint: ServerHint | null = solveBoardServer(
     parsed.data.board,
     parsed.data.width,
     parsed.data.height,
     parsed.data.mines,
     parsed.data.flagsPlaced,
+    locale,
   );
 
   if (solverHint && solverHint.confidence >= SOLVER_TRUST) {
@@ -91,17 +93,23 @@ export async function POST(req: NextRequest) {
           .eq("user_id", user.id)
           .gte("created_at", since);
         if ((count ?? 0) >= FREE_LIMIT) {
-          // Out of free hints — still serve solver guess
           if (solverHint) {
             return NextResponse.json({
               ...solverHint,
               reasoning:
-                `[лимит Gemini исчерпан — локальный анализ] ` +
+                tServer(locale, "server.geminiOverLimit") +
+                " " +
                 solverHint.reasoning,
             });
           }
           return NextResponse.json(
-            { error: "rate_limit", message: `Free лимит: ${FREE_LIMIT}/${WINDOW_MS / 60000}мин. Upgrade to Pro.` },
+            {
+              error: "rate_limit",
+              message: tServer(locale, "server.rateLimit", {
+                limit: FREE_LIMIT,
+                minutes: WINDOW_MS / 60000,
+              }),
+            },
             { status: 429 },
           );
         }
@@ -124,6 +132,7 @@ export async function POST(req: NextRequest) {
       height: parsed.data.height,
       mines: parsed.data.mines,
       flagsPlaced: parsed.data.flagsPlaced,
+      locale,
     });
 
     // Sanity check — never recommend an already-open cell
@@ -163,7 +172,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         ...solverHint,
         reasoning:
-          `[Gemini недоступен — локальный анализ] ` + solverHint.reasoning,
+          tServer(locale, "server.geminiOffline") + " " + solverHint.reasoning,
       });
     }
     const msg = e instanceof Error ? e.message : "ai error";

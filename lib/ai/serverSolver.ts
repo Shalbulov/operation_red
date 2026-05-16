@@ -1,17 +1,12 @@
+import { tServer } from "@/lib/i18n/serverT";
+import type { Locale } from "@/lib/i18n/dictionaries";
+
 /**
  * Pure constraint solver that works directly on the serialized board payload
  * sent from the client. Used inside /api/ai-coach to handle deterministic
  * cases BEFORE calling Gemini, eliminating LLM errors on easy positions.
  *
- * Algorithm:
- *   - For every open numbered cell, look at its closed neighbors.
- *     constraint = (cell.adjacent) - (flagged_neighbors)
- *   - If constraint == 0  → all closed neighbors are SAFE → reveal them.
- *   - If constraint == #closed → all closed neighbors are MINES → flag them.
- *   - Subset/superset deduction: if constraint A ⊂ constraint B and counts
- *     differ, deduce additional safe/mine cells.
- *   - Otherwise compute per-cell probability estimate (max of local
- *     constraints) → pick lowest as best guess.
+ * Reasoning strings are localized via tServer using the provided locale.
  */
 
 interface CellPayload {
@@ -66,6 +61,7 @@ export function solveBoardServer(
   height: number,
   totalMines: number,
   flagsPlaced: number,
+  locale: Locale = "ru",
 ): ServerHint | null {
   // Helper accessors
   const cellAt = (x: number, y: number) => board[y][x];
@@ -99,7 +95,6 @@ export function solveBoardServer(
   // Pass 1 — trivial deductions
   for (const c of constraints) {
     if (c.mines === 0 && c.cells.size > 0) {
-      // All cells safe → reveal any one
       const k = c.cells.values().next().value!;
       const [x, y] = parseKey(k);
       return {
@@ -107,7 +102,7 @@ export function solveBoardServer(
         y,
         action: "reveal",
         confidence: 1,
-        reasoning: `Соседнее число ${c.cells.size > 0 ? "" : ""}полностью закрыто флагами → клетка (${x}, ${y}) гарантированно безопасна.`,
+        reasoning: tServer(locale, "solver.safeByFlags", { x, y }),
         source: "solver",
       };
     }
@@ -119,7 +114,14 @@ export function solveBoardServer(
         y,
         action: "flag",
         confidence: 1,
-        reasoning: `Все закрытые соседи числа равны количеству оставшихся мин → клетка (${x}, ${y}) — мина.`,
+        reasoning: tServer(locale, "solver.mineByFlags", {
+          x,
+          y,
+          num: c.cells.size,
+          fx: 0,
+          fy: 0,
+          flags: 0,
+        }),
         source: "solver",
       };
     }
@@ -154,7 +156,7 @@ export function solveBoardServer(
           y,
           action: "reveal",
           confidence: 1,
-          reasoning: `Subset-вывод: из двух пересекающихся ограничений следует, что (${x}, ${y}) точно безопасна.`,
+          reasoning: tServer(locale, "solver.subsetSafe", { x, y }),
           source: "solver",
         };
       }
@@ -166,7 +168,7 @@ export function solveBoardServer(
           y,
           action: "flag",
           confidence: 1,
-          reasoning: `Subset-вывод: разница ограничений показывает что (${x}, ${y}) — мина.`,
+          reasoning: tServer(locale, "solver.subsetMine", { x, y }),
           source: "solver",
         };
       }
@@ -226,8 +228,12 @@ export function solveBoardServer(
       confidence: conf,
       reasoning:
         best.source === "constraint"
-          ? `Вероятность мины ≈ ${(best.p * 100).toFixed(0)}%. Из всех неопределённых клеток — самая безопасная.`
-          : `Локальных подсказок нет. Глобальная плотность мин ≈ ${(best.p * 100).toFixed(0)}%.`,
+          ? tServer(locale, "solver.probability", {
+              pct: Math.round(best.p * 100),
+            })
+          : tServer(locale, "solver.global", {
+              pct: Math.round(best.p * 100),
+            }),
       source: conf >= 0.99 ? "solver" : "heuristic",
     };
   }
@@ -238,7 +244,7 @@ export function solveBoardServer(
     y: Math.floor(height / 2),
     action: "reveal",
     confidence: 0.7,
-    reasoning: "Открой центр — это даст максимальный flood-fill.",
+    reasoning: tServer(locale, "solver.centerStart"),
     source: "heuristic",
   };
 }

@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { COACH_SYSTEM_PROMPT, buildUserPrompt } from "./prompt";
+import { buildSystemPrompt, buildUserPrompt } from "./prompt";
+import type { Locale } from "@/lib/i18n/dictionaries";
 
 export interface CoachResponse {
   x: number;
@@ -15,6 +16,7 @@ export async function getCoachHint(opts: {
   height: number;
   mines: number;
   flagsPlaced: number;
+  locale: Locale;
 }): Promise<CoachResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY is not configured");
@@ -36,7 +38,7 @@ export async function getCoachHint(opts: {
       { role: "user", parts: [{ text: userPrompt }] },
     ],
     config: {
-      systemInstruction: COACH_SYSTEM_PROMPT,
+      systemInstruction: buildSystemPrompt(opts.locale),
       temperature: 0.4,
       thinkingConfig: { thinkingBudget: 0 },
       responseMimeType: "application/json",

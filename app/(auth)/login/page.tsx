@@ -16,10 +16,12 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/cn";
+import { useT } from "@/lib/i18n/useT";
 
 type Tab = "signin" | "signup" | "forgot";
 
 export default function LoginPage() {
+  const t = useT();
   const [tab, setTab] = useState<Tab>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,8 +58,8 @@ export default function LoginPage() {
 
   // ── Sign in (password) ────────────────────────────────────────
   const signInPassword = async () => {
-    if (!validateEmail(email)) return toast.error("Невалидный email");
-    if (!password) return toast.error("Введи пароль");
+    if (!validateEmail(email)) return toast.error(t("login.toast.invalidEmail"));
+    if (!password) return toast.error(t("login.toast.passwordRequired"));
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -65,19 +67,19 @@ export default function LoginPage() {
     });
     setLoading(false);
     if (error) return toast.error(error.message);
-    toast.success("С возвращением, агент");
+    toast.success(t("login.toast.welcomeBack"));
     router.push("/play");
     router.refresh();
   };
 
   // ── Sign up (password) ────────────────────────────────────────
   const signUpPassword = async () => {
-    if (!validateEmail(email)) return toast.error("Невалидный email");
+    if (!validateEmail(email)) return toast.error(t("login.toast.invalidEmail"));
     if (password.length < 6) {
-      return toast.error("Пароль минимум 6 символов");
+      return toast.error(t("login.toast.passwordTooShort"));
     }
     if (password !== passwordConfirm) {
-      return toast.error("Пароли не совпадают");
+      return toast.error(t("login.toast.passwordMismatch"));
     }
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
@@ -91,18 +93,18 @@ export default function LoginPage() {
     if (error) return toast.error(error.message);
     // If email confirmation is OFF in Supabase, session is created instantly.
     if (data.session) {
-      toast.success("Регистрация успешна");
+      toast.success(t("login.toast.registered"));
       router.push("/play");
       router.refresh();
     } else {
       setSignupSent(true);
-      toast.success("Подтверди email чтобы войти");
+      toast.success(t("login.toast.confirmEmail"));
     }
   };
 
   // ── Magic link (passwordless) ─────────────────────────────────
   const sendMagicLink = async () => {
-    if (!validateEmail(email)) return toast.error("Невалидный email");
+    if (!validateEmail(email)) return toast.error(t("login.toast.invalidEmail"));
     setLoading(true);
     const { error } = await supabase.auth.signInWithOtp({
       email,
@@ -112,12 +114,12 @@ export default function LoginPage() {
     });
     setLoading(false);
     if (error) return toast.error(error.message);
-    toast.success("Magic link отправлен на email");
+    toast.success(t("login.toast.magicSent"));
   };
 
   // ── Password reset request ────────────────────────────────────
   const requestReset = async () => {
-    if (!validateEmail(email)) return toast.error("Невалидный email");
+    if (!validateEmail(email)) return toast.error(t("login.toast.invalidEmail"));
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
@@ -125,7 +127,7 @@ export default function LoginPage() {
     setLoading(false);
     if (error) return toast.error(error.message);
     setForgotSent(true);
-    toast.success("Ссылка для сброса пароля отправлена");
+    toast.success(t("login.toast.resetSent"));
   };
 
   // ── Google OAuth ──────────────────────────────────────────────
@@ -149,13 +151,13 @@ export default function LoginPage() {
         <div className="border-b border-steel-700 p-6 flex items-center gap-3">
           <span className="block w-2 h-2 bg-red-alert animate-pulse" />
           <div>
-            <span className="tag tag-red">ВХОД В ШТАБ</span>
+            <span className="tag tag-red">{t("login.tag")}</span>
             <h1 className="display text-2xl mt-2">
               {tab === "signin"
-                ? "АУТЕНТИФИКАЦИЯ"
+                ? t("login.title.signin")
                 : tab === "signup"
-                  ? "РЕГИСТРАЦИЯ"
-                  : "СБРОС ПАРОЛЯ"}
+                  ? t("login.title.signup")
+                  : t("login.title.forgot")}
             </h1>
           </div>
         </div>
@@ -164,29 +166,29 @@ export default function LoginPage() {
         <div className="flex gap-px bg-steel-700">
           {(
             [
-              { id: "signin" as const, label: "Войти", icon: LogIn },
-              { id: "signup" as const, label: "Регистрация", icon: UserPlus },
-              { id: "forgot" as const, label: "Сброс", icon: KeyRound },
+              { id: "signin" as const, labelKey: "login.tab.signin" as const, icon: LogIn },
+              { id: "signup" as const, labelKey: "login.tab.signup" as const, icon: UserPlus },
+              { id: "forgot" as const, labelKey: "login.tab.forgot" as const, icon: KeyRound },
             ]
-          ).map((t) => {
-            const Icon = t.icon;
+          ).map((tabDef) => {
+            const Icon = tabDef.icon;
             return (
               <button
-                key={t.id}
+                key={tabDef.id}
                 onClick={() => {
-                  setTab(t.id);
+                  setTab(tabDef.id);
                   setForgotSent(false);
                   setSignupSent(false);
                 }}
                 className={cn(
                   "mono text-[10px] sm:text-xs font-bold uppercase tracking-widest px-2 sm:px-3 py-3 transition-colors flex-1 flex items-center justify-center gap-1.5",
-                  tab === t.id
+                  tab === tabDef.id
                     ? "bg-red-alert text-void"
                     : "bg-panel text-bone-dim hover:bg-elevated hover:text-bone",
                 )}
               >
                 <Icon className="w-3 h-3" />
-                <span className="hidden xs:inline">{t.label}</span>
+                <span className="hidden xs:inline">{t(tabDef.labelKey)}</span>
               </button>
             );
           })}
@@ -197,19 +199,18 @@ export default function LoginPage() {
           {tab === "forgot" && forgotSent ? (
             <div className="text-center py-6">
               <Mail className="w-10 h-10 text-red-alert mx-auto mb-3" />
-              <h2 className="display text-xl mb-2">ПРОВЕРЬ ПОЧТУ</h2>
+              <h2 className="display text-xl mb-2">{t("login.check.email.title")}</h2>
               <p className="text-bone-dim text-sm">
-                Письмо со ссылкой для сброса отправлено на{" "}
+                {t("login.check.email.desc")}{" "}
                 <span className="text-bone">{email}</span>
               </p>
             </div>
           ) : tab === "signup" && signupSent ? (
             <div className="text-center py-6">
               <Mail className="w-10 h-10 text-red-alert mx-auto mb-3" />
-              <h2 className="display text-xl mb-2">ПОДТВЕРДИ EMAIL</h2>
+              <h2 className="display text-xl mb-2">{t("login.signup.confirm.title")}</h2>
               <p className="text-bone-dim text-sm">
-                Письмо отправлено на <span className="text-bone">{email}</span>.
-                Перейди по ссылке чтобы активировать аккаунт.
+                {t("login.signup.confirm.desc")} <span className="text-bone">{email}</span>
               </p>
             </div>
           ) : (
@@ -233,13 +234,13 @@ export default function LoginPage() {
                         <path d="M21.35 11.1H12v3.2h5.35c-.23 1.45-1.66 4.27-5.35 4.27-3.22 0-5.85-2.67-5.85-5.95s2.63-5.95 5.85-5.95c1.83 0 3.06.78 3.76 1.45l2.56-2.46C16.92 3.93 14.69 3 12 3 6.92 3 2.82 7.04 2.82 12s4.1 9 9.18 9c5.3 0 8.82-3.72 8.82-8.96 0-.6-.06-1.05-.13-1.5Z" />
                       </svg>
                     )}
-                    Войти через Google
+                    {t("login.btn.google")}
                   </button>
 
                   <div className="flex items-center gap-3 my-4">
                     <span className="h-px flex-1 bg-steel-700" />
                     <span className="mono text-[10px] text-steel-500 uppercase tracking-widest">
-                      ИЛИ
+                      {t("login.divider.or")}
                     </span>
                     <span className="h-px flex-1 bg-steel-700" />
                   </div>
@@ -249,7 +250,7 @@ export default function LoginPage() {
               {/* Email field */}
               <div>
                 <label className="mono text-[10px] text-steel-400 uppercase tracking-widest block mb-1">
-                  Email
+                  {t("login.field.email")}
                 </label>
                 <input
                   type="email"
@@ -265,7 +266,7 @@ export default function LoginPage() {
               {(tab === "signin" || tab === "signup") && (
                 <div>
                   <label className="mono text-[10px] text-steel-400 uppercase tracking-widest block mb-1">
-                    Пароль
+                    {t("login.field.password")}
                   </label>
                   <input
                     type="password"
@@ -283,7 +284,7 @@ export default function LoginPage() {
               {tab === "signup" && (
                 <div>
                   <label className="mono text-[10px] text-steel-400 uppercase tracking-widest block mb-1">
-                    Повтори пароль
+                    {t("login.field.passwordConfirm")}
                   </label>
                   <input
                     type="password"
@@ -318,10 +319,10 @@ export default function LoginPage() {
                   <ArrowRight className="w-4 h-4" />
                 )}
                 {tab === "signin"
-                  ? "Войти"
+                  ? t("login.btn.signin")
                   : tab === "signup"
-                    ? "Создать аккаунт"
-                    : "Отправить ссылку для сброса"}
+                    ? t("login.btn.signup")
+                    : t("login.btn.forgot")}
               </button>
 
               {/* Forgot link under sign-in */}
@@ -331,7 +332,7 @@ export default function LoginPage() {
                     onClick={() => setTab("forgot")}
                     className="mono text-[10px] text-steel-400 uppercase tracking-widest hover:text-red-alert"
                   >
-                    Забыл пароль?
+                    {t("login.btn.forgotLink")}
                   </button>
                   <button
                     onClick={sendMagicLink}
@@ -339,7 +340,7 @@ export default function LoginPage() {
                     className="mono text-[10px] text-steel-400 uppercase tracking-widest hover:text-red-alert flex items-center gap-1"
                   >
                     <Mail className="w-3 h-3" />
-                    Magic link
+                    {t("login.btn.magic")}
                   </button>
                 </div>
               )}
@@ -352,7 +353,7 @@ export default function LoginPage() {
             href="/"
             className="mono text-[10px] text-steel-500 uppercase tracking-widest hover:text-bone"
           >
-            ← На главную
+            {t("login.back")}
           </Link>
         </div>
       </div>

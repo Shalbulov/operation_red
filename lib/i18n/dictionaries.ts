@@ -237,6 +237,42 @@ export const dictionaries = {
     "shop.bundle.feature.bgs": "Все фоны включая Blood Moon",
     "shop.bundle.feature.forever": "Доступ навсегда",
     "shop.bundle.btn": "Купить Bundle",
+
+    // Skin descriptions
+    "skin.ops.desc": "Стандартная экипировка сапёра. Сталь, бетон, кровь.",
+    "skin.carbon.desc": "Карбоновое плетение. Идеально для тех, кто ценит точность.",
+    "skin.blueprint.desc": "Технический чертёж. Тонкие линии, инженерная точность.",
+    "skin.neonTokyo.desc": "Кислотный неон и киберпанк. Не для слабонервных.",
+    "skin.vintage.desc": "Сепия, военные карты, рукописные пометки красными чернилами.",
+    "skin.ink.desc": "Японская тушь на белой рисовой бумаге. Минимализм по-самурайски.",
+    "skin.glass.desc": "Эксклюзив для Pro. Матовое стекло, тонкие тени, прозрачность.",
+
+    // Background descriptions
+    "bg.void.desc": "Чистая пустота с корнерами оперативной разметки.",
+    "bg.tacGrid.desc": "Реальный радар командного пункта: концентрические кольца, прицел, азимуты.",
+    "bg.concrete.desc": "Бетон, аварийная лампа, опасные шевроны. SECTOR 04 / RESTRICTED.",
+    "bg.topo.desc": "Военная топокарта с двумя пиками, тропой и компасом. Координаты Алматы.",
+    "bg.bloodMoon.desc": "Кровавая луна, звёзды, туман. Финальная ночь миссии.",
+    "bg.dossier.desc": "Архивная бумага с красными штампами CLASSIFIED. Дело №OPS-RED-04.",
+    "bg.marble.desc": "Белый итальянский мрамор с серыми и красными прожилками. Executive command.",
+    "bg.snowOps.desc": "Зимняя тактическая местность: точки эвакуации EVAC-A и LZ-Bravo, компас, -12°C.",
+
+    // Server solver reasoning (used by /api/ai-coach when solver is certain)
+    "solver.safeByFlags": "Соседнее число окружено достаточным количеством флагов — клетка ({x}, {y}) гарантированно безопасна.",
+    "solver.mineByFlags": "Число {num} в ({fx}, {fy}) при {flags} флаге равно числу закрытых соседей. Клетка ({x}, {y}) — мина.",
+    "solver.subsetSafe": "Subset-вывод: из двух пересекающихся ограничений следует, что ({x}, {y}) точно безопасна.",
+    "solver.subsetMine": "Subset-вывод: разница ограничений показывает что ({x}, {y}) — мина.",
+    "solver.probability": "Вероятность мины ≈ {pct}%. Из всех неопределённых — самая безопасная.",
+    "solver.global": "Нет локальных подсказок. Глобальная плотность мин ≈ {pct}%. Угадай.",
+    "solver.centerStart": "Открой центр — это даст максимальный flood-fill.",
+
+    // Generic error / status (server-side responses)
+    "server.rateLimit": "Бесплатный лимит: {limit} за {minutes} мин. Переходи на Pro.",
+    "server.geminiOffline": "[Gemini недоступен — локальный анализ]",
+    "server.geminiOverLimit": "[лимит Gemini исчерпан — локальный анализ]",
+
+    // AI language label for the Gemini system prompt
+    "_ai.language": "русский",
   },
 
   en: {
@@ -453,6 +489,37 @@ export const dictionaries = {
     "shop.bundle.feature.bgs": "All backgrounds including Blood Moon",
     "shop.bundle.feature.forever": "Lifetime access",
     "shop.bundle.btn": "Buy Bundle",
+
+    "skin.ops.desc": "Standard sapper gear. Steel, concrete, blood.",
+    "skin.carbon.desc": "Carbon fiber weave. Perfect for those who value precision.",
+    "skin.blueprint.desc": "Technical blueprint. Thin lines, engineering accuracy.",
+    "skin.neonTokyo.desc": "Acid neon and cyberpunk. Not for the faint of heart.",
+    "skin.vintage.desc": "Sepia, military maps, handwritten notes in red ink.",
+    "skin.ink.desc": "Japanese ink on white rice paper. Samurai minimalism.",
+    "skin.glass.desc": "Pro exclusive. Frosted glass, thin shadows, transparency.",
+
+    "bg.void.desc": "Pure void with corner operational markers.",
+    "bg.tacGrid.desc": "Real command-post radar: concentric rings, crosshair, azimuths.",
+    "bg.concrete.desc": "Concrete, emergency lamp, hazard chevrons. SECTOR 04 / RESTRICTED.",
+    "bg.topo.desc": "Military topo map with two peaks, trail and compass. Almaty coordinates.",
+    "bg.bloodMoon.desc": "Blood moon, stars, fog. Final night of the mission.",
+    "bg.dossier.desc": "Archival paper with red CLASSIFIED stamps. Case #OPS-RED-04.",
+    "bg.marble.desc": "White Italian marble with grey and red veins. Executive command.",
+    "bg.snowOps.desc": "Tactical winter terrain: EVAC-A and LZ-Bravo extraction points, compass, -12°C.",
+
+    "solver.safeByFlags": "An adjacent number is fully covered by flags — cell ({x}, {y}) is guaranteed safe.",
+    "solver.mineByFlags": "Number {num} at ({fx}, {fy}) with {flags} flag matches its closed neighbors. Cell ({x}, {y}) is a mine.",
+    "solver.subsetSafe": "Subset deduction: two overlapping constraints prove ({x}, {y}) is safe.",
+    "solver.subsetMine": "Subset deduction: difference of constraints shows ({x}, {y}) is a mine.",
+    "solver.probability": "Mine probability ≈ {pct}%. Safest of all uncertain cells.",
+    "solver.global": "No local clues. Global mine density ≈ {pct}%. Guess.",
+    "solver.centerStart": "Open the center — gives maximum flood-fill.",
+
+    "server.rateLimit": "Free limit: {limit} per {minutes} min. Upgrade to Pro.",
+    "server.geminiOffline": "[Gemini unavailable — local analysis]",
+    "server.geminiOverLimit": "[Gemini limit reached — local analysis]",
+
+    "_ai.language": "English",
   },
 
   kz: {
@@ -670,6 +737,37 @@ export const dictionaries = {
     "shop.bundle.feature.bgs": "Blood Moon-мен қоса барлық фондар",
     "shop.bundle.feature.forever": "Шексіз қолжетімділік",
     "shop.bundle.btn": "Bundle сатып алу",
+
+    "skin.ops.desc": "Сапёрдің стандартты жабдығы. Болат, бетон, қан.",
+    "skin.carbon.desc": "Көміртекті өрім. Дәлдікті бағалайтындар үшін.",
+    "skin.blueprint.desc": "Техникалық сызба. Жұқа сызықтар, инженерлік дәлдік.",
+    "skin.neonTokyo.desc": "Қышқыл неон, киберпанк. Әлсіз жүректілерге емес.",
+    "skin.vintage.desc": "Сепия, әскери карталар, қызыл сиямен қолжазба ескертулер.",
+    "skin.ink.desc": "Ақ күріш қағазындағы жапон сиясы. Самурай минимализмі.",
+    "skin.glass.desc": "Pro-ға арналған эксклюзив. Күңгірт шыны, жұқа көлеңкелер, мөлдірлік.",
+
+    "bg.void.desc": "Жедел белгілермен таза бостық.",
+    "bg.tacGrid.desc": "Нақты командалық радар: концентрлі сақиналар, нысана, азимуттар.",
+    "bg.concrete.desc": "Бетон, авариялық лампа, қауіпті шеврондар. SECTOR 04 / RESTRICTED.",
+    "bg.topo.desc": "Екі шыңы, соқпағы және компасы бар әскери топокарта. Алматы координаттары.",
+    "bg.bloodMoon.desc": "Қанды Ай, жұлдыздар, тұман. Миссияның соңғы түні.",
+    "bg.dossier.desc": "Қызыл CLASSIFIED штампы бар мұрағат қағазы. Іс №OPS-RED-04.",
+    "bg.marble.desc": "Сұр және қызыл тамырлары бар ақ итальяндық мрамор. Executive command.",
+    "bg.snowOps.desc": "Қысқы тактикалық жер: EVAC-A және LZ-Bravo эвакуация нүктелері, компас, -12°C.",
+
+    "solver.safeByFlags": "Көрші сан жеткілікті туларымен қоршалған — ({x}, {y}) ұяшығы кепілдендірілген түрде қауіпсіз.",
+    "solver.mineByFlags": "({fx}, {fy}) санындағы {num} {flags} ту кезінде жабық көршілер санына тең. ({x}, {y}) ұяшығы — мина.",
+    "solver.subsetSafe": "Subset қорытынды: қиылысатын шектеулер ({x}, {y}) қауіпсіздігін көрсетеді.",
+    "solver.subsetMine": "Subset қорытынды: шектеулер айырмашылығы ({x}, {y}) — мина екенін көрсетеді.",
+    "solver.probability": "Мина ықтималдығы ≈ {pct}%. Барлық анықталмағандардан — ең қауіпсізі.",
+    "solver.global": "Жергілікті ишараттар жоқ. Жаһандық мина тығыздығы ≈ {pct}%. Болжа.",
+    "solver.centerStart": "Орталықты аш — максималды flood-fill береді.",
+
+    "server.rateLimit": "Тегін лимит: {minutes} мин ішінде {limit}. Pro-ға өт.",
+    "server.geminiOffline": "[Gemini қолжетімсіз — жергілікті талдау]",
+    "server.geminiOverLimit": "[Gemini лимиті таусылды — жергілікті талдау]",
+
+    "_ai.language": "қазақ",
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 

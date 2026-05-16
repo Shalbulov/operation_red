@@ -6,8 +6,10 @@ import Link from "next/link";
 import { Loader2, KeyRound, CheckCircle2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { useT } from "@/lib/i18n/useT";
 
 export default function ResetPasswordPage() {
+  const t = useT();
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -45,8 +47,8 @@ export default function ResetPasswordPage() {
 
   const update = async () => {
     if (!supabase) return;
-    if (password.length < 6) return toast.error("Пароль минимум 6 символов");
-    if (password !== confirm) return toast.error("Пароли не совпадают");
+    if (password.length < 6) return toast.error(t("login.toast.passwordTooShort"));
+    if (password !== confirm) return toast.error(t("login.toast.passwordMismatch"));
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
@@ -55,7 +57,7 @@ export default function ResetPasswordPage() {
       return toast.error(error.message);
     }
     setDone(true);
-    toast.success("Пароль обновлён");
+    toast.success(t("reset.toast.updated"));
     setTimeout(() => router.push("/play"), 1200);
   };
 
@@ -76,8 +78,8 @@ export default function ResetPasswordPage() {
         <div className="border-b border-steel-700 p-6 flex items-center gap-3">
           <KeyRound className="w-5 h-5 text-red-alert" />
           <div>
-            <span className="tag tag-red">СБРОС ПАРОЛЯ</span>
-            <h1 className="display text-2xl mt-2">НОВЫЙ ПАРОЛЬ</h1>
+            <span className="tag tag-red">{t("reset.tag")}</span>
+            <h1 className="display text-2xl mt-2">{t("reset.title")}</h1>
           </div>
         </div>
 
@@ -85,14 +87,14 @@ export default function ResetPasswordPage() {
           {done ? (
             <div className="text-center py-6">
               <CheckCircle2 className="w-10 h-10 text-red-alert mx-auto mb-3" />
-              <h2 className="display text-xl mb-2">ГОТОВО</h2>
-              <p className="text-bone-dim text-sm">Перенаправляю в игру...</p>
+              <h2 className="display text-xl mb-2">{t("reset.done.title")}</h2>
+              <p className="text-bone-dim text-sm">{t("reset.done.desc")}</p>
             </div>
           ) : !ready ? (
             <div className="text-center py-8 flex flex-col items-center gap-3">
               <Loader2 className="w-6 h-6 animate-spin text-red-alert" />
               <p className="text-bone-dim text-xs mono uppercase tracking-widest">
-                Проверка ссылки...
+                {t("reset.checking")}
               </p>
               {error && (
                 <p className="text-red-alert text-xs">{error}</p>
@@ -101,11 +103,11 @@ export default function ResetPasswordPage() {
           ) : (
             <>
               <p className="text-bone-dim text-sm">
-                Введи новый пароль для входа в аккаунт.
+                {t("reset.intro")}
               </p>
               <div>
                 <label className="mono text-[10px] text-steel-400 uppercase tracking-widest block mb-1">
-                  Новый пароль
+                  {t("reset.field.new")}
                 </label>
                 <input
                   type="password"
@@ -118,7 +120,7 @@ export default function ResetPasswordPage() {
               </div>
               <div>
                 <label className="mono text-[10px] text-steel-400 uppercase tracking-widest block mb-1">
-                  Повтори пароль
+                  {t("login.field.passwordConfirm")}
                 </label>
                 <input
                   type="password"
@@ -139,7 +141,7 @@ export default function ResetPasswordPage() {
                 ) : (
                   <KeyRound className="w-4 h-4" />
                 )}
-                Обновить пароль
+                {t("reset.btn.update")}
               </button>
             </>
           )}
@@ -150,7 +152,7 @@ export default function ResetPasswordPage() {
             href="/login"
             className="mono text-[10px] text-steel-500 uppercase tracking-widest hover:text-bone"
           >
-            ← К входу
+            {t("reset.back")}
           </Link>
         </div>
       </div>

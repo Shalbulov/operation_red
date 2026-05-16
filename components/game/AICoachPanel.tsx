@@ -5,6 +5,7 @@ import { Brain, Sparkles, Loader2, AlertTriangle, Calculator, Cpu } from "lucide
 import { toast } from "sonner";
 import { useGameStore } from "@/lib/stores/gameStore";
 import { useInventoryStore } from "@/lib/stores/inventoryStore";
+import { useSettingsStore } from "@/lib/stores/settingsStore";
 import { localHint } from "@/lib/game/solver";
 import { AI_LIMITS } from "@/lib/constants";
 import { useT } from "@/lib/i18n/useT";
@@ -26,6 +27,7 @@ export function AICoachPanel() {
   const hintsUsed = useGameStore((s) => s.hintsUsed);
   const status = useGameStore((s) => s.status);
   const isPro = useInventoryStore((s) => s.isPro);
+  const locale = useSettingsStore((s) => s.locale);
   const t = useT();
 
   const [loading, setLoading] = useState(false);
@@ -61,6 +63,7 @@ export function AICoachPanel() {
           height: state.height,
           mines: state.mines,
           flagsPlaced: state.flagsPlaced,
+          locale,
         }),
       });
       let data: AIResponse;
