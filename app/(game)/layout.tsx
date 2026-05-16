@@ -9,8 +9,10 @@ export default function GameLayout({
   return (
     <div className="flex flex-col min-h-full">
       <BackgroundSurface />
-      <TopBar />
-      <div className="flex-1 flex flex-col">{children}</div>
+      <div className="relative z-10 flex-1 flex flex-col">
+        <TopBar />
+        <div className="flex-1 flex flex-col">{children}</div>
+      </div>
     </div>
   );
 }

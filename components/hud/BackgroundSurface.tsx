@@ -20,8 +20,8 @@ export function BackgroundSurface() {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 -z-10 pointer-events-none"
-      style={bg.style}
+      className="fixed inset-0 pointer-events-none"
+      style={{ ...bg.style, zIndex: 0 }}
     />
   );
 }
