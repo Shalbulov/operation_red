@@ -15,6 +15,9 @@ export type ProductSlug =
   | "bg_concrete"
   | "bg_topo"
   | "bg_blood_moon"
+  | "bg_dossier"
+  | "bg_marble"
+  | "bg_snow_ops"
   | "bundle_mega"
   | "pro_monthly";
 
@@ -96,6 +99,30 @@ export const PRODUCTS: Record<ProductSlug, PolarProduct> = {
     grantsBackgrounds: ["bloodMoon"],
     priceCents: 299,
   },
+  bg_dossier: {
+    slug: "bg_dossier",
+    name: "Dossier Background",
+    description: "Архивная бумага с красными штампами CLASSIFIED",
+    polarProductId: process.env.POLAR_PRODUCT_BG_DOSSIER ?? "",
+    grantsBackgrounds: ["dossier"],
+    priceCents: 149,
+  },
+  bg_marble: {
+    slug: "bg_marble",
+    name: "Carrara Marble Background",
+    description: "Белый мрамор с серыми и красными прожилками",
+    polarProductId: process.env.POLAR_PRODUCT_BG_MARBLE ?? "",
+    grantsBackgrounds: ["marble"],
+    priceCents: 249,
+  },
+  bg_snow_ops: {
+    slug: "bg_snow_ops",
+    name: "Snow Ops Background",
+    description: "Зимняя тактическая местность с компасом",
+    polarProductId: process.env.POLAR_PRODUCT_BG_SNOWOPS ?? "",
+    grantsBackgrounds: ["snowOps"],
+    priceCents: 249,
+  },
   bundle_mega: {
     slug: "bundle_mega",
     name: "Mega Bundle",
@@ -138,6 +165,9 @@ const BACKGROUND_TO_SLUG: Record<string, ProductSlug> = {
   concrete: "bg_concrete",
   topo: "bg_topo",
   bloodMoon: "bg_blood_moon",
+  dossier: "bg_dossier",
+  marble: "bg_marble",
+  snowOps: "bg_snow_ops",
 };
 
 export function getSlugForSkin(skinId: string): ProductSlug | undefined {

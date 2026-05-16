@@ -256,6 +256,157 @@ const BLOOD_MOON_SVG = `
 </svg>`;
 
 /* =========================================================================
+   6. DOSSIER — cream paper, red CLASSIFIED stamps, form lines
+   ========================================================================= */
+const DOSSIER_SVG = `
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800' preserveAspectRatio='xMidYMid slice'>
+  <defs>
+    <filter id='paperGrain'>
+      <feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/>
+      <feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0.08 0'/>
+    </filter>
+    <radialGradient id='paperWarm' cx='30%' cy='30%' r='80%'>
+      <stop offset='0%' stop-color='#fffaf0' stop-opacity='0.5'/>
+      <stop offset='100%' stop-color='#e8dcc0' stop-opacity='0'/>
+    </radialGradient>
+  </defs>
+  <rect width='800' height='800' fill='#f3ecd9'/>
+  <rect width='800' height='800' fill='url(#paperWarm)'/>
+  <rect width='800' height='800' filter='url(#paperGrain)'/>
+  <ellipse cx='180' cy='160' rx='90' ry='55' fill='#c9a060' opacity='0.18'/>
+  <ellipse cx='180' cy='160' rx='55' ry='35' fill='#c9a060' opacity='0.22'/>
+  <g transform='translate(540,180) rotate(-15)' opacity='0.85'>
+    <rect x='-140' y='-40' width='280' height='80' fill='none' stroke='#c41e2b' stroke-width='4'/>
+    <rect x='-130' y='-30' width='260' height='60' fill='none' stroke='#c41e2b' stroke-width='1.5'/>
+    <text x='-128' y='14' fill='#c41e2b' font-family='ui-monospace,monospace' font-size='38' font-weight='900' letter-spacing='4'>CLASSIFIED</text>
+  </g>
+  <g transform='translate(160,640) rotate(8)' opacity='0.75'>
+    <rect x='-100' y='-25' width='200' height='50' fill='none' stroke='#c41e2b' stroke-width='2.5'/>
+    <text x='-90' y='10' fill='#c41e2b' font-family='ui-monospace,monospace' font-size='22' font-weight='900' letter-spacing='3'>TOP SECRET</text>
+  </g>
+  <text x='30' y='40' fill='#3a3530' font-family='ui-monospace,monospace' font-size='14' font-weight='700' letter-spacing='2'>FILE //OPS-RED-04 / 2026</text>
+  <text x='30' y='62' fill='#7a6f5e' font-family='ui-monospace,monospace' font-size='11'>AUTHORIZED PERSONNEL ONLY</text>
+  <g stroke='#7a6f5e' stroke-width='1' opacity='0.4'>
+    <line x1='30' y1='130' x2='480' y2='130'/>
+    <line x1='30' y1='175' x2='440' y2='175'/>
+    <line x1='30' y1='220' x2='460' y2='220'/>
+    <line x1='30' y1='265' x2='420' y2='265'/>
+  </g>
+  <g fill='#7a6f5e' opacity='0.6' font-family='ui-monospace,monospace' font-size='11'>
+    <text x='30' y='123'>OPERATIVE:</text>
+    <text x='30' y='168'>LOCATION:</text>
+    <text x='30' y='213'>CLEARANCE:</text>
+    <text x='30' y='258'>OBJECTIVE:</text>
+  </g>
+  <line x1='500' y1='720' x2='770' y2='720' stroke='#3a3530' stroke-width='1.2'/>
+  <text x='520' y='745' fill='#7a6f5e' font-family='ui-monospace,monospace' font-size='10' letter-spacing='2'>AGENT SIGNATURE</text>
+  <line x1='500' y1='775' x2='670' y2='775' stroke='#3a3530' stroke-width='1'/>
+  <text x='520' y='792' fill='#7a6f5e' font-family='ui-monospace,monospace' font-size='10' letter-spacing='2'>DATE</text>
+  <g fill='#7a6f5e' opacity='0.5' font-family='ui-monospace,monospace' font-size='10'>
+    <text x='720' y='30'>PG 01/14</text>
+  </g>
+</svg>`;
+
+/* =========================================================================
+   7. MARBLE — white marble with grey + red veins
+   ========================================================================= */
+const MARBLE_SVG = `
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800' preserveAspectRatio='xMidYMid slice'>
+  <defs>
+    <linearGradient id='marbleBase' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#fafaf5'/>
+      <stop offset='50%' stop-color='#f0eee8'/>
+      <stop offset='100%' stop-color='#e6e3da'/>
+    </linearGradient>
+    <filter id='marbleNoise'>
+      <feTurbulence type='fractalNoise' baseFrequency='0.012' numOctaves='4' seed='8'/>
+      <feColorMatrix values='0 0 0 0 0.75 0 0 0 0 0.73 0 0 0 0 0.68 0 0 0 0.5 -0.15'/>
+    </filter>
+  </defs>
+  <rect width='800' height='800' fill='url(#marbleBase)'/>
+  <rect width='800' height='800' filter='url(#marbleNoise)' opacity='0.7'/>
+  <g stroke='#b8b3a0' fill='none' stroke-width='1.4' opacity='0.55'>
+    <path d='M 0,180 Q 200,170 350,200 T 600,180 T 800,210'/>
+    <path d='M 100,380 Q 280,395 460,360 T 700,390 T 800,370' stroke-width='1.8'/>
+    <path d='M 0,560 Q 220,545 400,580 T 650,540 T 800,560'/>
+    <path d='M 50,720 Q 280,705 480,740 T 760,710' stroke-width='1.6'/>
+  </g>
+  <g stroke='#c41e2b' fill='none' stroke-width='1.5' opacity='0.45'>
+    <path d='M 0,300 Q 180,310 320,280 T 520,300 T 800,280'/>
+    <path d='M 200,650 Q 320,640 420,665 T 700,640' stroke-width='1.2'/>
+    <path d='M 0,80 Q 100,75 200,90 T 380,80' stroke-width='1.2' opacity='0.6'/>
+    <path d='M 480,470 Q 580,455 660,475 T 800,460' stroke-width='1.6'/>
+  </g>
+  <g stroke='#c41e2b' fill='none' stroke-width='0.6' opacity='0.3'>
+    <path d='M 100,200 L 130,205 L 150,195 L 175,210'/>
+    <path d='M 500,350 L 540,358 L 580,345'/>
+    <path d='M 280,580 L 310,585 L 340,575 L 365,590'/>
+  </g>
+  <g stroke='#b8b3a0' stroke-width='2' fill='none' opacity='0.45'>
+    <path d='M30,30 L30,70 M30,30 L70,30'/>
+    <path d='M770,30 L770,70 M770,30 L730,30'/>
+    <path d='M30,770 L30,730 M30,770 L70,770'/>
+    <path d='M770,770 L770,730 M770,770 L730,770'/>
+  </g>
+  <text x='40' y='790' fill='#c41e2b' opacity='0.45' font-family='ui-monospace,monospace' font-size='10' font-weight='700' letter-spacing='3'>CARRARA // EXEC</text>
+</svg>`;
+
+/* =========================================================================
+   8. SNOW OPS — white tactical winter terrain with red contours
+   ========================================================================= */
+const SNOW_OPS_SVG = `
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800' preserveAspectRatio='xMidYMid slice'>
+  <defs>
+    <radialGradient id='snowDepth' cx='50%' cy='40%' r='80%'>
+      <stop offset='0%' stop-color='#ffffff' stop-opacity='1'/>
+      <stop offset='100%' stop-color='#d8dde0' stop-opacity='1'/>
+    </radialGradient>
+    <filter id='snowGrain'>
+      <feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' seed='2'/>
+      <feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.6 0 0 0 0 0.65 0 0 0 0.08 0'/>
+    </filter>
+  </defs>
+  <rect width='800' height='800' fill='url(#snowDepth)'/>
+  <rect width='800' height='800' filter='url(#snowGrain)'/>
+  <g fill='none' stroke='#c41e2b' stroke-width='1.6' opacity='0.85'>
+    <circle cx='220' cy='260' r='38'/>
+    <circle cx='220' cy='260' r='72' opacity='0.85'/>
+    <circle cx='220' cy='260' r='110' opacity='0.7'/>
+    <circle cx='220' cy='260' r='150' opacity='0.55'/>
+    <circle cx='220' cy='260' r='195' opacity='0.4'/>
+    <circle cx='220' cy='260' r='245' opacity='0.28'/>
+  </g>
+  <text x='196' y='265' fill='#c41e2b' opacity='1' font-family='ui-monospace,monospace' font-size='13' font-weight='800'>EVAC-A</text>
+  <g fill='none' stroke='#8a8a8a' stroke-width='1.4' opacity='0.55'>
+    <circle cx='590' cy='580' r='45'/>
+    <circle cx='590' cy='580' r='85' opacity='0.85'/>
+    <circle cx='590' cy='580' r='130' opacity='0.7'/>
+    <circle cx='590' cy='580' r='180' opacity='0.55'/>
+    <circle cx='590' cy='580' r='235' opacity='0.4'/>
+  </g>
+  <text x='568' y='585' fill='#3a3a3a' opacity='0.85' font-family='ui-monospace,monospace' font-size='12' font-weight='700'>LZ-Bravo</text>
+  <path d='M 100,400 Q 250,380 360,420 T 500,440 T 700,400' fill='none' stroke='#c41e2b' stroke-width='2' opacity='0.65' stroke-dasharray='8 5'/>
+  <g fill='#c41e2b' opacity='0.9'>
+    <path d='M 120,395 L 130,395 L 130,415 L 120,415 Z'/>
+    <path d='M 130,395 L 152,400 L 130,408 Z'/>
+    <path d='M 680,395 L 690,395 L 690,415 L 680,415 Z'/>
+    <path d='M 690,395 L 712,400 L 690,408 Z'/>
+  </g>
+  <g stroke='#1a1a1a' stroke-width='1' opacity='0.05'>
+    <path d='M0,80 L800,80 M0,160 L800,160 M0,240 L800,240 M0,320 L800,320 M0,400 L800,400 M0,480 L800,480 M0,560 L800,560 M0,640 L800,640 M0,720 L800,720'/>
+    <path d='M80,0 L80,800 M160,0 L160,800 M240,0 L240,800 M320,0 L320,800 M400,0 L400,800 M480,0 L480,800 M560,0 L560,800 M640,0 L640,800 M720,0 L720,800'/>
+  </g>
+  <g transform='translate(720,90)'>
+    <circle r='32' fill='#fff' stroke='#c41e2b' stroke-width='1.5'/>
+    <path d='M0,-26 L5,0 L0,5 L-5,0 Z' fill='#c41e2b'/>
+    <path d='M0,26 L5,0 L0,-5 L-5,0 Z' fill='#c41e2b' opacity='0.3'/>
+    <text x='-4' y='-36' fill='#c41e2b' font-family='ui-monospace,monospace' font-size='12' font-weight='700'>N</text>
+  </g>
+  <text x='20' y='30' fill='#c41e2b' opacity='0.7' font-family='ui-monospace,monospace' font-size='11' font-weight='700' letter-spacing='2'>OP // WHITEOUT</text>
+  <text x='620' y='790' fill='#3a3a3a' opacity='0.5' font-family='ui-monospace,monospace' font-size='11' font-weight='700' letter-spacing='2'>-12°C / WIND NE</text>
+</svg>`;
+
+/* =========================================================================
    BACKGROUND REGISTRY
    ========================================================================= */
 
@@ -328,6 +479,45 @@ export const BACKGROUNDS: Record<string, Background> = {
     style: {
       backgroundColor: "#070608",
       backgroundImage: svgUrl(BLOOD_MOON_SVG),
+      ...baseStyle,
+    },
+  },
+  dossier: {
+    id: "dossier",
+    name: "Dossier",
+    description: "Архивная бумага с красными штампами CLASSIFIED. Дело №OPS-RED-04.",
+    rarity: "common",
+    priceCents: 149,
+    priceCoins: 300,
+    style: {
+      backgroundColor: "#f3ecd9",
+      backgroundImage: svgUrl(DOSSIER_SVG),
+      ...baseStyle,
+    },
+  },
+  marble: {
+    id: "marble",
+    name: "Carrara Marble",
+    description: "Белый итальянский мрамор с серыми и красными прожилками. Executive command.",
+    rarity: "rare",
+    priceCents: 249,
+    priceCoins: 800,
+    style: {
+      backgroundColor: "#f0eee8",
+      backgroundImage: svgUrl(MARBLE_SVG),
+      ...baseStyle,
+    },
+  },
+  snowOps: {
+    id: "snowOps",
+    name: "Snow Ops",
+    description: "Зимняя тактическая местность: точки эвакуации EVAC-A и LZ-Bravo, компас, -12°C.",
+    rarity: "rare",
+    priceCents: 249,
+    priceCoins: 800,
+    style: {
+      backgroundColor: "#e8ecef",
+      backgroundImage: svgUrl(SNOW_OPS_SVG),
       ...baseStyle,
     },
   },
