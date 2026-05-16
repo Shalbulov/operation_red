@@ -8,7 +8,6 @@ import {
   Coins,
   CreditCard,
   Crown,
-  Image as ImageIcon,
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -281,10 +280,12 @@ export default function ShopPage() {
                   </div>
 
                   <div
-                    className="h-24 border border-steel-700 flex items-center justify-center"
+                    className="h-32 border border-steel-700 relative overflow-hidden"
                     style={getBackground(bg.id).style}
                   >
-                    <ImageIcon className="w-6 h-6 text-bone/30" />
+                    <div className="absolute bottom-1 right-1 mono text-[8px] uppercase tracking-widest text-bone/60 bg-black/40 px-1.5 py-0.5">
+                      PREVIEW
+                    </div>
                   </div>
 
                   <p className="text-bone-dim text-xs leading-relaxed min-h-[2.5rem]">
