@@ -7,8 +7,10 @@ import { formatTime } from "@/lib/utils/format";
 import { computeFlagAccuracy } from "@/lib/game/engine";
 import { Trophy, Skull, RotateCw, Coins, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useT } from "@/lib/i18n/useT";
 
 export function GameOverModal() {
+  const t = useT();
   const status = useGameStore((s) => s.status);
   const startedAt = useGameStore((s) => s.startedAt);
   const endedAt = useGameStore((s) => s.endedAt);
@@ -61,7 +63,7 @@ export function GameOverModal() {
               <Skull className="w-6 h-6 text-red-alert" />
             )}
             <h2 className="display text-2xl">
-              {won ? "ПОЛЕ ОЧИЩЕНО" : "ПОДРЫВ"}
+              {won ? t("game.win.title") : t("game.lose.title")}
             </h2>
           </div>
           <button
@@ -74,9 +76,9 @@ export function GameOverModal() {
 
         {/* stats */}
         <div className="grid grid-cols-3 gap-px bg-steel-700">
-          <Stat label="ВРЕМЯ" value={formatTime(ms)} />
-          <Stat label="ТОЧНОСТЬ" value={`${Math.round(acc.pct * 100)}%`} />
-          <Stat label="ПОЛЕ" value={`${width}×${height}`} />
+          <Stat label={t("game.stat.time")} value={formatTime(ms)} />
+          <Stat label={t("game.stat.accuracy")} value={`${Math.round(acc.pct * 100)}%`} />
+          <Stat label={t("game.stat.field")} value={`${width}×${height}`} />
         </div>
 
         {/* coins */}
@@ -85,7 +87,7 @@ export function GameOverModal() {
             <div className="flex items-center gap-2">
               <Coins className="w-4 h-4 text-red-alert" />
               <span className="mono text-xs uppercase tracking-widest text-steel-300">
-                Награда
+                {t("game.reward")}
               </span>
             </div>
             <span className="mono text-xl font-bold text-red-alert">
@@ -104,13 +106,13 @@ export function GameOverModal() {
             className="btn-primary flex items-center justify-center gap-2"
           >
             <RotateCw className="w-4 h-4" />
-            Снова
+            {t("game.btn.again")}
           </button>
           <button
             onClick={() => setDismissed(true)}
             className="btn-ghost"
           >
-            Закрыть
+            {t("game.btn.close")}
           </button>
         </div>
       </div>

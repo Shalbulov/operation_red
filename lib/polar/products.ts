@@ -11,6 +11,9 @@ export type ProductSlug =
   | "skin_blueprint"
   | "skin_neon_tokyo"
   | "skin_vintage"
+  | "bg_tac_grid"
+  | "bg_concrete"
+  | "bg_topo"
   | "bg_blood_moon"
   | "bundle_mega"
   | "pro_monthly";
@@ -61,6 +64,30 @@ export const PRODUCTS: Record<ProductSlug, PolarProduct> = {
     grantsSkins: ["vintage"],
     priceCents: 249,
   },
+  bg_tac_grid: {
+    slug: "bg_tac_grid",
+    name: "Tactical Grid Background",
+    description: "Координатная сетка военного планшета",
+    polarProductId: process.env.POLAR_PRODUCT_BG_TACGRID ?? "",
+    grantsBackgrounds: ["tacGrid"],
+    priceCents: 149,
+  },
+  bg_concrete: {
+    slug: "bg_concrete",
+    name: "Concrete Bunker Background",
+    description: "Бетонные стены подземного штаба",
+    polarProductId: process.env.POLAR_PRODUCT_BG_CONCRETE ?? "",
+    grantsBackgrounds: ["concrete"],
+    priceCents: 199,
+  },
+  bg_topo: {
+    slug: "bg_topo",
+    name: "Topographic Background",
+    description: "Топографическая карта местности",
+    polarProductId: process.env.POLAR_PRODUCT_BG_TOPO ?? "",
+    grantsBackgrounds: ["topo"],
+    priceCents: 199,
+  },
   bg_blood_moon: {
     slug: "bg_blood_moon",
     name: "Blood Moon Background",
@@ -107,6 +134,9 @@ const SKIN_TO_SLUG: Record<string, ProductSlug> = {
   vintage: "skin_vintage",
 };
 const BACKGROUND_TO_SLUG: Record<string, ProductSlug> = {
+  tacGrid: "bg_tac_grid",
+  concrete: "bg_concrete",
+  topo: "bg_topo",
   bloodMoon: "bg_blood_moon",
 };
 

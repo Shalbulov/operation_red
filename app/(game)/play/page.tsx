@@ -10,9 +10,11 @@ import { GameOverModal } from "@/components/game/GameOverModal";
 import { GameReporter, difficultyFromDims } from "@/components/game/GameReporter";
 import { useGameStore } from "@/lib/stores/gameStore";
 import { DIFFICULTIES } from "@/lib/constants";
+import { useT } from "@/lib/i18n/useT";
 import { RotateCw } from "lucide-react";
 
 export default function PlayPage() {
+  const t = useT();
   const newGame = useGameStore((s) => s.newGame);
   const width = useGameStore((s) => s.width);
   const height = useGameStore((s) => s.height);
@@ -34,10 +36,10 @@ export default function PlayPage() {
       <div className="flex items-center gap-2 sm:gap-3">
         <span className="tag tag-red">
           <span className="block w-1.5 h-1.5 bg-red-alert animate-pulse" />
-          MISSION ACTIVE
+          {t("play.tag.mission")}
         </span>
         <span className="tag hidden sm:inline-flex">
-          {width}×{height} / {mines} MINES
+          {width}×{height} / {mines} {t("play.hud.mines")}
         </span>
         <span className="h-px flex-1 bg-steel-700" />
         <button
@@ -46,7 +48,7 @@ export default function PlayPage() {
           aria-label="Restart"
         >
           <RotateCw className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">RESTART</span>
+          <span className="hidden sm:inline">{t("play.btn.restart")}</span>
         </button>
       </div>
 
@@ -67,20 +69,19 @@ export default function PlayPage() {
         <aside className="lg:w-80 flex flex-col gap-3">
           <AICoachPanel />
           <div className="frame p-4 text-bone-dim text-xs leading-relaxed">
-            <div className="stencil text-xs text-bone mb-2">УПРАВЛЕНИЕ</div>
+            <div className="stencil text-xs text-bone mb-2">{t("play.controls.title")}</div>
             <ul className="space-y-1.5">
               <li>
-                <span className="mono text-red-alert">CLICK</span> — открыть клетку
+                <span className="mono text-red-alert">CLICK</span> — {t("play.controls.click")}
               </li>
               <li>
-                <span className="mono text-red-alert">RIGHT-CLICK</span> — флаг
+                <span className="mono text-red-alert">RIGHT-CLICK</span> — {t("play.controls.rightclick")}
               </li>
               <li>
-                <span className="mono text-red-alert">CLICK</span> на цифре —
-                открыть соседей (chord)
+                <span className="mono text-red-alert">CLICK</span> {t("play.controls.chord")}
               </li>
               <li className="lg:hidden">
-                <span className="mono text-red-alert">LONG-PRESS</span> — флаг
+                <span className="mono text-red-alert">LONG-PRESS</span> — {t("play.controls.longpress")}
               </li>
             </ul>
           </div>

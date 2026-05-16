@@ -7,6 +7,7 @@ import { useGameStore } from "@/lib/stores/gameStore";
 import { useInventoryStore } from "@/lib/stores/inventoryStore";
 import { localHint } from "@/lib/game/solver";
 import { AI_LIMITS } from "@/lib/constants";
+import { useT } from "@/lib/i18n/useT";
 
 interface AIResponse {
   x: number;
@@ -25,6 +26,7 @@ export function AICoachPanel() {
   const hintsUsed = useGameStore((s) => s.hintsUsed);
   const status = useGameStore((s) => s.status);
   const isPro = useInventoryStore((s) => s.isPro);
+  const t = useT();
 
   const [loading, setLoading] = useState(false);
   const [last, setLast] = useState<AIResponse | null>(null);
@@ -34,11 +36,11 @@ export function AICoachPanel() {
 
   const requestHint = async () => {
     if (status !== "playing" && status !== "idle") {
-      toast.error("Игра не идёт");
+      toast.error(t("ai.toast.gameInactive"));
       return;
     }
     if (remaining <= 0) {
-      toast.error(`Лимит исчерпан (${limit}). Upgrade to Pro.`);
+      toast.error(t("ai.limit.reached"));
       return;
     }
     setLoading(true);
@@ -74,7 +76,7 @@ export function AICoachPanel() {
       // local fallback
       const h = localHint(state);
       if (!h) {
-        toast.error("Не могу подсказать на пустом поле");
+        toast.error(t("ai.toast.cantHintEmpty"));
         setLoading(false);
         return;
       }
@@ -82,7 +84,7 @@ export function AICoachPanel() {
       setLast(data);
       setHint({ x: data.x, y: data.y, action: data.action });
       incHints();
-      toast("AI offline — локальный анализ", { duration: 2000 });
+      toast(t("ai.toast.offline"), { duration: 2000 });
     } finally {
       setLoading(false);
     }
@@ -93,7 +95,7 @@ export function AICoachPanel() {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Brain className="w-4 h-4 text-red-alert" />
-          <span className="stencil text-sm">AI COACH</span>
+          <span className="stencil text-sm">{t("ai.title")}</span>
         </div>
         <span className="mono text-[10px] text-steel-400 uppercase tracking-widest">
           {isPro ? "PRO ∞" : `${remaining}/${limit}`}
@@ -111,14 +113,14 @@ export function AICoachPanel() {
         ) : (
           <Sparkles className="w-4 h-4" />
         )}
-        {loading ? "Анализ..." : "Получить подсказку"}
+        {loading ? t("ai.analyzing") : t("ai.btn")}
       </button>
 
       {last && (
         <div className="mt-3 border-t border-steel-700 pt-3">
           <div className="flex items-center justify-between mb-2 gap-2">
             <span className="tag tag-red">
-              {last.action === "reveal" ? "ОТКРЫТЬ" : "ФЛАГ"} ({last.x}, {last.y})
+              {last.action === "reveal" ? t("ai.action.reveal") : t("ai.action.flag")} ({last.x}, {last.y})
             </span>
             <span className="mono text-[10px] text-steel-400 uppercase tracking-widest">
               {Math.round(last.confidence * 100)}%
@@ -128,25 +130,19 @@ export function AICoachPanel() {
           {/* Source badge */}
           <div className="flex items-center gap-1.5 mb-2">
             {last.source === "solver" ? (
-              <span
-                className="tag flex items-center gap-1 !text-[9px] border-red-alert text-red-alert"
-                title="Логически выведено — 100% надёжно"
-              >
+              <span className="tag flex items-center gap-1 !text-[9px] border-red-alert text-red-alert">
                 <Calculator className="w-2.5 h-2.5" />
-                SOLVER · 100%
+                {t("ai.badge.solver")}
               </span>
             ) : last.source === "ai" ? (
-              <span
-                className="tag flex items-center gap-1 !text-[9px]"
-                title="Ответ от Gemini AI"
-              >
+              <span className="tag flex items-center gap-1 !text-[9px]">
                 <Cpu className="w-2.5 h-2.5" />
-                GEMINI AI
+                {t("ai.badge.ai")}
               </span>
             ) : (
               <span className="tag flex items-center gap-1 !text-[9px]">
                 <Brain className="w-2.5 h-2.5" />
-                ЭВРИСТИКА
+                {t("ai.badge.heuristic")}
               </span>
             )}
           </div>
@@ -157,9 +153,7 @@ export function AICoachPanel() {
           {last.source !== "solver" && last.confidence < 1 && (
             <div className="mt-2 flex items-start gap-1.5 text-[10px] text-steel-500 mono uppercase tracking-wider">
               <AlertTriangle className="w-2.5 h-2.5 mt-0.5 shrink-0 text-red-alert" />
-              <span>
-                AI может ошибаться на сложных позициях. Финальное решение за тобой.
-              </span>
+              <span>{t("ai.disclaimer")}</span>
             </div>
           )}
         </div>

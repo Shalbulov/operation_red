@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { SKIN_LIST } from "@/lib/skins/registry";
 import { BACKGROUND_LIST, getBackground } from "@/lib/skins/backgrounds";
 import { getSlugForSkin, getSlugForBackground } from "@/lib/polar/products";
+import { useT } from "@/lib/i18n/useT";
 import { useSettingsStore } from "@/lib/stores/settingsStore";
 import { useInventoryStore } from "@/lib/stores/inventoryStore";
 import { SkinPreview } from "@/components/shop/SkinPreview";
@@ -25,6 +26,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 type Tab = "skins" | "backgrounds" | "pro";
 
 export default function ShopPage() {
+  const t = useT();
   const [tab, setTab] = useState<Tab>("skins");
   const skinId = useSettingsStore((s) => s.skinId);
   const bgId = useSettingsStore((s) => s.backgroundId);
@@ -93,19 +95,19 @@ export default function ShopPage() {
         useInventoryStore.setState({ coins: j.coinsLeft });
         grantSkin(skinId);
         grantBg(skinId);
-        toast.success("Куплено!");
+        toast.success(t("shop.toast.bought"));
       } else if (res.status === 401) {
         // Anonymous mode — try local
         if (spend(priceCoins)) {
           grantSkin(skinId);
           grantBg(skinId);
-          toast.success("Куплено локально");
+          toast.success(t("shop.toast.boughtLocal"));
         } else {
-          toast.error("Не хватает coins");
+          toast.error(t("shop.toast.notEnough"));
         }
       } else {
         const j = await res.json().catch(() => ({}));
-        toast.error(j.error ?? "Ошибка покупки");
+        toast.error(j.error ?? t("common.error"));
       }
     } finally {
       setBusy(null);
@@ -115,7 +117,7 @@ export default function ShopPage() {
   /** Buy via Polar — slug is resolved to product id server-side. */
   const buyWithPolarSlug = (slug: string | undefined) => {
     if (!slug) {
-      toast.error("Этот продукт пока недоступен");
+      toast.error(t("shop.toast.notAvail"));
       return;
     }
     window.location.href = `/api/polar/buy?slug=${encodeURIComponent(slug)}`;
@@ -127,7 +129,7 @@ export default function ShopPage() {
         {/* Header */}
         <div className="flex items-center gap-3 mb-3">
           <Sparkles className="w-5 h-5 text-red-alert" />
-          <span className="tag tag-red">МАГАЗИН СНАРЯЖЕНИЯ</span>
+          <span className="tag tag-red">{t("shop.tag")}</span>
           <span className="h-px flex-1 bg-steel-700" />
           <div className="frame flex items-center gap-2 px-3 py-1.5">
             <Coins className="w-3.5 h-3.5 text-red-alert" />
@@ -137,29 +139,29 @@ export default function ShopPage() {
         </div>
 
         <h1 className="display text-4xl sm:text-5xl mb-6">
-          СКИНЫ <span className="text-red-alert">& ПОДПИСКА</span>
+          {t("shop.title.1")} <span className="text-red-alert">{t("shop.title.2")}</span>
         </h1>
 
         {/* Tabs */}
         <div className="flex gap-px bg-steel-700 border border-steel-700 mb-6">
           {(
             [
-              { id: "skins", label: "Скины доски" },
-              { id: "backgrounds", label: "Фоны" },
-              { id: "pro", label: "PRO" },
-            ] as { id: Tab; label: string }[]
-          ).map((t) => (
+              { id: "skins" as const, label: t("shop.tab.skins") },
+              { id: "backgrounds" as const, label: t("shop.tab.backgrounds") },
+              { id: "pro" as const, label: t("shop.tab.pro") },
+            ]
+          ).map((tabDef) => (
             <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
+              key={tabDef.id}
+              onClick={() => setTab(tabDef.id)}
               className={cn(
                 "mono text-xs font-bold uppercase tracking-widest px-4 py-3 transition-colors flex-1",
-                tab === t.id
+                tab === tabDef.id
                   ? "bg-red-alert text-void"
                   : "bg-panel text-bone-dim hover:bg-elevated hover:text-bone",
               )}
             >
-              {t.label}
+              {tabDef.label}
             </button>
           ))}
         </div>
@@ -182,7 +184,7 @@ export default function ShopPage() {
                     </div>
                     {equipped ? (
                       <span className="tag tag-red flex items-center gap-1">
-                        <Check className="w-3 h-3" /> EQUIPPED
+                        <Check className="w-3 h-3" /> {t("shop.equipped")}
                       </span>
                     ) : owned ? (
                       <span className="tag">OWNED</span>
@@ -271,7 +273,7 @@ export default function ShopPage() {
                     </div>
                     {equipped ? (
                       <span className="tag tag-red flex items-center gap-1">
-                        <Check className="w-3 h-3" /> EQUIPPED
+                        <Check className="w-3 h-3" /> {t("shop.equipped")}
                       </span>
                     ) : owned ? (
                       <span className="tag">OWNED</span>

@@ -5,19 +5,22 @@ import { Crosshair, Radio, Trophy, Sparkles, User, Coins } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useInventoryStore } from "@/lib/stores/inventoryStore";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageToggle } from "./LanguageToggle";
+import { useT } from "@/lib/i18n/useT";
 import { cn } from "@/lib/utils/cn";
 
 const NAV = [
-  { href: "/play", label: "Игра", icon: Crosshair },
-  { href: "/daily", label: "Daily", icon: Radio },
-  { href: "/leaderboard", label: "Топ", icon: Trophy },
-  { href: "/shop", label: "Магазин", icon: Sparkles },
+  { href: "/play", labelKey: "nav.play" as const, icon: Crosshair },
+  { href: "/daily", labelKey: "nav.daily" as const, icon: Radio },
+  { href: "/leaderboard", labelKey: "nav.leaderboard" as const, icon: Trophy },
+  { href: "/shop", labelKey: "nav.shop" as const, icon: Sparkles },
 ];
 
 export function TopBar() {
   const pathname = usePathname();
   const coins = useInventoryStore((s) => s.coins);
   const isPro = useInventoryStore((s) => s.isPro);
+  const t = useT();
 
   return (
     <header className="sticky top-0 z-40 border-b border-steel-700 bg-sunken/90 backdrop-blur safe-top">
@@ -45,7 +48,7 @@ export function TopBar() {
                 )}
               >
                 <Icon className="w-3 h-3" />
-                <span className="hidden sm:inline">{item.label}</span>
+                <span className="hidden sm:inline">{t(item.labelKey)}</span>
               </Link>
             );
           })}
@@ -57,8 +60,9 @@ export function TopBar() {
             <span className="mono text-xs tabular-nums font-bold">{coins}</span>
           </div>
           {isPro && (
-            <span className="tag tag-red hidden sm:inline-flex">PRO</span>
+            <span className="tag tag-red hidden sm:inline-flex">{t("nav.pro")}</span>
           )}
+          <LanguageToggle />
           <ThemeToggle />
           <Link
             href="/profile"

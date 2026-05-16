@@ -15,7 +15,7 @@ export const BACKGROUNDS: Record<string, Background> = {
     name: "Tactical Grid",
     description: "Координатная сетка военного планшета.",
     rarity: "common",
-    priceCents: 0,
+    priceCents: 149,
     priceCoins: 200,
     style: {
       backgroundColor: "var(--bg-void)",
